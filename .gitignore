@@ -14,6 +14,6 @@ hs_err_pid*
 
 
 # Intellij Project Configuration
-*.iml
+*.iml
 *.ipr
 *.iws

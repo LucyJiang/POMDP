@@ -1,4 +1,4 @@
-package mdp;
+package pomdp;
 
 public class NoFoundStateException extends RuntimeException {
 

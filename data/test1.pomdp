@@ -1,0 +1,11 @@
+# Define all States in the format of:
+# "! state_ID [Observation]"
+
+
+
+# Define all Actions in the format of:
+# "@ action_ID from_state_ID to_state_ID reward"
+
+
+# Define default discount factor in the format of:
+# "% discount_factor"

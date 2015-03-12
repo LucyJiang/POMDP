@@ -10,7 +10,7 @@ import pomdp.State;
 public class Runner {
 
     public static void main(String[] args) {
-        POMDP m = POMDP.importFromFile("data/template.pomdp");
+        POMDP m = POMDP.importFromFile("data/test1.pomdp");
         System.out.println(m);
 
     }

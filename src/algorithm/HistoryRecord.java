@@ -11,7 +11,7 @@ public class HistoryRecord {
     private String toID;
     private double reward;
     private double totalReward;
-    //TODO belife and so on....
+    //TODO belief and so on....
 
     public HistoryRecord(
             String from,
@@ -25,6 +25,7 @@ public class HistoryRecord {
     }
 
     public static HistoryRecord consume(HistoryRecord prev, Action action){
+        //TODO
         return new HistoryRecord(null,null,0,0);
     }
 }

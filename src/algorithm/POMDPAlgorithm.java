@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by LeoDong on 12/03/2015.
  */
-public abstract class POMDPAlgorithm implements Algorithm<Configuration,Result> {
+public abstract class POMDPAlgorithm implements Algorithm<Configuration, Result> {
     protected Configuration config;
     protected POMDP model;
     protected Result result;
@@ -23,7 +23,7 @@ public abstract class POMDPAlgorithm implements Algorithm<Configuration,Result> 
     }
 
     @Override
-    public boolean input(Configuration config){
+    public boolean input(Configuration config) {
         if (config != null) {
             if (!config.isConsistant()) {
                 return false;
@@ -34,13 +34,13 @@ public abstract class POMDPAlgorithm implements Algorithm<Configuration,Result> 
             this.config = config;
             this.model = config.getModel();
             this.currentState = this.model.getStateSet()
-                                          .getState(config.getInitialStateID());
+                    .getState(config.getInitialStateID());
 
             //put initial history
             this.history.add(new HistoryRecord("START",
-                                               config.getInitialStateID(),
-                                               0,
-                                               0));
+                    config.getInitialStateID(),
+                    0,
+                    0));
 
             return true;
         }
@@ -48,8 +48,8 @@ public abstract class POMDPAlgorithm implements Algorithm<Configuration,Result> 
     }
 
     @Override
-    public void forward(){
-        if(this.getStage()!=STAGE_INPUT_FINISH){
+    public void forward() {
+        if (this.getStage() != STAGE_INPUT_FINISH) {
             throw new AlgorithmException("Input First!");
         }
         while (/*condition to stop, can use something in config*/ "".equals("")) {
@@ -62,13 +62,15 @@ public abstract class POMDPAlgorithm implements Algorithm<Configuration,Result> 
         }
 
         this.result = null; //TODO process result
-        this.stage=STAGE_EXECUTE_FINISH;
+        this.stage = STAGE_EXECUTE_FINISH;
 
-    };
+    }
+
+    ;
 
     @Override
     public Result getResult() {
-        if(this.getStage()!=STAGE_EXECUTE_FINISH){
+        if (this.getStage() != STAGE_EXECUTE_FINISH) {
             throw new AlgorithmException("Execute First!");
         }
         return this.result;
@@ -80,9 +82,11 @@ public abstract class POMDPAlgorithm implements Algorithm<Configuration,Result> 
     }
 
     @Override
-    public void run(){
+    public void run() {
 
-    };
+    }
+
+    ;
 
     protected abstract Action step();
 }

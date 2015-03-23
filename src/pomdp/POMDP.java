@@ -1,6 +1,6 @@
 package pomdp;
 
-import exception.InconsistantException;
+import exception.InconsistentException;
 import exception.ParseException;
 
 import java.io.BufferedReader;
@@ -15,7 +15,7 @@ public class POMDP {
     private ActionSet actionSet;
     private double discountFactor;
 
-    private static final int OBSERVATION_PRECISION = 4;//0.xxx
+    private static final int OBSERVATION_PRECISION = 3;//0.xxx
 	
 	private POMDP(StateSet ss, ActionSet as, double discountFactor){
 		this.stateSet = ss;
@@ -91,7 +91,7 @@ public class POMDP {
 
     public static class Factory{
         public static POMDP generateRandomly(int noStates){
-
+            //TODO
             return null;
         }
         public static POMDP createFromFile(String filename){
@@ -141,7 +141,7 @@ public class POMDP {
             }
             /* States */
             List<State> needRandomObservation = new LinkedList<State>();
-            int totalObservation = (int) Math.pow(10, OBSERVATION_PRECISION);
+            int restObservation = (int) Math.pow(10, OBSERVATION_PRECISION);
             for (Map.Entry<Integer,String> m : statesString.entrySet()){
                 String cmd = m.getValue();
                 Integer line = m.getKey();
@@ -165,18 +165,18 @@ public class POMDP {
                         State s = new State(cmds[1],ob);
                         stateSet.addState(cmds[1],s);
 
-                        totalObservation = totalObservation - (int)(ob * Math.pow(10,
+                        restObservation = restObservation - (int)(ob * Math.pow(10,
                                                                                   OBSERVATION_PRECISION));
-                        if(totalObservation<0){
-                            throw new InconsistantException("The total Observation should not be more than 1");
+                        if(restObservation<0){
+                            throw new InconsistentException("The total Observation should not be more than 1");
                         }
 
                     }catch (NumberFormatException nfe){
                         throw new ParseException(line,cmd,"Illegal Observation");
-                    }catch (InconsistantException ie) {
+                    }catch (InconsistentException ie) {
                         throw new ParseException(line,
                                                  cmd,
-                                                 "Inconsistant:" + ie.getMessage());
+                                                 "Inconsistent:" + ie.getMessage());
                     }
                 }
             }
@@ -184,18 +184,18 @@ public class POMDP {
             for(int i = 0;i<sizeOfNeedRandom;i++){
                 State current = needRandomObservation.get(i);
                 if(i==sizeOfNeedRandom-1){
-                    current.setObservation(totalObservation/(Math.pow(10.0,
+                    current.setObservation(restObservation/(Math.pow(10.0,
                                                                       OBSERVATION_PRECISION)));
-                    totalObservation = 0;
+                    restObservation = 0;
                 }else{
-                    double randvalue = Math.floor(Math.random()*totalObservation);
+                    double randvalue = Math.floor(Math.random()*restObservation);
                     current.setObservation(randvalue/Math.pow(10.0,
                                                               OBSERVATION_PRECISION));
-                    totalObservation = totalObservation-(int)randvalue;
+                    restObservation = restObservation-(int)randvalue;
                 }
             }
-            if(totalObservation!= 0){
-                throw new InconsistantException("The total Obeservation should be 1.");
+            if(restObservation!= 0){
+                throw new InconsistentException("The total Observation should be 1.");
             }
 
             /* Actions */
@@ -212,18 +212,18 @@ public class POMDP {
                         double reward = Double.parseDouble(cmds[4]);
                         State from = stateSet.getState(cmds[2]);
                         if(from==null){
-                            throw new ParseException(line,cmd,"Unknow from State:"+cmds[2]);
+                            throw new ParseException(line,cmd,"Unknown from State:"+cmds[2]);
                         }
                         State to = stateSet.getState(cmds[3]);
                         if(to==null){
-                            throw new ParseException(line,cmd,"Unknow to State:"+cmds[3]);
+                            throw new ParseException(line,cmd,"Unknown to State:"+cmds[3]);
                         }
                         Action a = new Action(cmds[1],from, to, reward);
-                        actionSet.addAction(a.getId(), a.consistent());
+                        actionSet.addAction(a.getId(), a);
 
                     }catch (NumberFormatException nfe){
                         throw new ParseException(line,cmd,"Illegal Observation");
-                    }catch (InconsistantException ie) {
+                    }catch (InconsistentException ie) {
                         throw new ParseException(line,
                                                  cmd,
                                                  "Inconsistant:" + ie.getMessage());
@@ -231,9 +231,9 @@ public class POMDP {
                 }
             }
 
-        /* Discount Factor */
+            /* Discount Factor */
             if(dfString.size()!=1){
-                throw new InconsistantException("Too many discount factor declarations on lines:"+dfString.keySet());
+                throw new InconsistentException("Too many discount factor declarations on lines:"+dfString.keySet());
             }else{
                 //length == 1
                 for (Map.Entry<Integer,String> m : dfString.entrySet()){

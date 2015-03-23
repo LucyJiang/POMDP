@@ -1,6 +1,6 @@
 package pomdp;
 
-import exception.InconsistantException;
+import exception.InconsistentException;
 
 import java.util.*;
 
@@ -10,11 +10,11 @@ public class ActionSet {
 
     public boolean addAction(String id, Action action) {
         if (_this.containsKey(id)) {
-            throw new InconsistantException("Found duplicated action ID: " + id);
+            throw new InconsistentException("Found duplicated action ID: " + id);
         }
         if (!id.equals(action.getId())) {
-            throw new InconsistantException(
-                    "Index ID: " + id + " Action ID: " + action.getId());
+            throw new InconsistentException(
+                    "Index ID: " + id + ", Action ID: " + action.getId());
         }
         _this.put(id, action);
         return true;

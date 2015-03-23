@@ -23,13 +23,13 @@ public class Configuration {
     }
 
     /**
-     * Check whether the configuration is consistency.
+     * Check whether the configuration is consistent.
      * i.e. model!=null, initialStateID!=null and initialStateID
      * is included in the StateSet of the model
      *
-     * @return @code{true} iff configuration is consistency
+     * @return @code{true} iff configuration is consistent
      */
-    public boolean isConsistency(){
+    public boolean isConsistent(){
         if (model==null || initialStateID==null){
             return false;
         }

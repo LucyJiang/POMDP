@@ -28,7 +28,7 @@ public abstract class POMDPAlgorithm
     public boolean input(Configuration config) {
         if (config != null) {
             //check consistant of the configuration
-            if (!config.isConsistency()) {
+            if (!config.isConsistent()) {
                 return false;
             }
 

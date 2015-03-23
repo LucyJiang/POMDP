@@ -1,6 +1,6 @@
 package pomdp;
 
-import exception.InconsistantException;
+import exception.InconsistentException;
 
 import java.util.*;
 
@@ -14,10 +14,10 @@ public class StateSet {
 
     public boolean addState(String id, State state) {
         if (_this.containsKey(id)) {
-            throw new InconsistantException("Found duplicated state ID: " + id);
+            throw new InconsistentException("Found duplicated state ID: " + id);
         }
         if (!id.equals(state.getId())) {
-            throw new InconsistantException(
+            throw new InconsistentException(
                     "Index ID: " + id + " State ID: " + state.getId());
         }
         _this.put(id, state);

@@ -22,14 +22,12 @@ public class Action {
         this.toState = toState;
         this.reward = reward;
         this.id = id;
-    }
 
-    public Action consistent(){
         this.fromState.addAction(this);
         this.toState.addFromState(this.fromState);
         this.fromState.addToState(this.toState);
-        return this;
     }
+
 
     public String getId() {
         return id;

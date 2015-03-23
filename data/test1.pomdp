@@ -1,10 +1,10 @@
 # Define all States in the format of:
 # "! state_ID [Observation]"
 ! s1 0.218
-! s2 0.6454
-! s3 0.0585
-! s4 0.0214
-! s5 0.0567
+! s2 0.345
+! s3 0.055
+! s4
+! s5
 
 # Define all Actions in the format of:
 # "@ action_ID from_state_ID to_state_ID reward"

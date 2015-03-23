@@ -14,7 +14,7 @@ public interface Algorithm<C extends Configuration, O extends Result>
 
     public boolean input(C config);
 
-    public void forward();
+    public void execute();
 
     public O getResult();
 

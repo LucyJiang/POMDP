@@ -14,12 +14,11 @@ public class AlgorithmB extends POMDPAlgorithm {
     /**
      * @return the Action to move
      */
-    protected Action step() {
+    protected Action decide() {
         //TODO core algorithm, decide the action to move
 
         Action act = null; //TODO the action adapted
 
-        this.currentState = act.getToState();
         return act;
     }
 }

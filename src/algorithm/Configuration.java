@@ -22,11 +22,18 @@ public class Configuration {
         return initialStateID;
     }
 
-    public boolean isConsistant(){
+    /**
+     * Check whether the configuration is consistency.
+     * i.e. model!=null, initialStateID!=null and initialStateID
+     * is included in the StateSet of the model
+     *
+     * @return @code{true} iff configuration is consistency
+     */
+    public boolean isConsistency(){
         if (model==null || initialStateID==null){
             return false;
         }
-        if (!model.getStateSet().containsKey(initialStateID)){
+        if (!model.getStateSet().contains(initialStateID)){
             return false;
         }
         return true;

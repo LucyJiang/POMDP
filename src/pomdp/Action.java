@@ -49,19 +49,9 @@ public class Action {
 
     @Override
     public String toString() {
-        return "[@] "+id+"{ " + fromState.getId() +
+        return "[@] "+id+"\t: " + fromState.getId() +
                "\t==>\t" + toState.getId() +
-               "\t [reward = " + reward + "]}";
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        Action clone = (Action) super.clone();
-        clone.id = id;
-        clone.reward = reward;
-        clone.fromState = (State) fromState.clone();
-        clone.toState = (State) toState.clone();
-        return clone;
+               "\t[reward = " + reward + "]";
     }
 
     @Override

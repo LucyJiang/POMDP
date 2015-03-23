@@ -2,34 +2,49 @@ package pomdp;
 
 import exception.InconsistantException;
 
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
-public class StateSet extends TreeMap<String, State> {
+public class StateSet {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
+    private TreeMap<String, State> _this = new TreeMap<String, State>();
 
     public State getState(String id) {
-        return this.get(id);
+        return _this.get(id);
     }
 
     public boolean addState(String id, State state) {
-        if (this.containsKey(id)) {
+        if (_this.containsKey(id)) {
             throw new InconsistantException("Found duplicated state ID: " + id);
         }
         if (!id.equals(state.getId())) {
             throw new InconsistantException(
                     "Index ID: " + id + " State ID: " + state.getId());
         }
-        this.put(id, state);
+        _this.put(id, state);
         return true;
     }
 
-    @Override
+    public boolean contains(String id) {
+        return _this.containsKey(id);
+    }
+
+    public Collection<State> states() {
+        return _this.values();
+    }
+
+    public Set<String> ids() {
+        return _this.keySet();
+    }
+
+    public Set<Map.Entry<String, State>> pairs() {
+        return _this.entrySet();
+    }
+
     public String toString() {
-        return this.keySet().toString();
+        List<String> strings = new LinkedList<String>();
+        for (State s : states()){
+            strings.add(s.toString());
+        }
+        return String.join("\n", strings);
     }
 }

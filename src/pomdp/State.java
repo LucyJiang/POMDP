@@ -18,16 +18,16 @@ public class State {
 
     }
 
-    public State addFromState(State s) {
-        return fromStates.put(s.id, s);
+    public boolean addFromState(State s) {
+        return fromStates.addState(s.id, s);
     }
 
-    public State addToState(State s) {
-        return toStates.put(s.id, s);
+    public boolean addToState(State s) {
+        return toStates.addState(s.id, s);
     }
 
     public boolean addAction(Action action) {
-        actionSet.put(action.getId(), action);
+        actionSet.addAction(action.getId(), action);
         return true;
     }
 
@@ -58,25 +58,13 @@ public class State {
 
     @Override
     public String toString() {
-        return "[!] " + id + "{" +
-               " actionSet=" + actionSet +
-               " fromStates=" + fromStates +
-               " toStates=" + toStates +
-               " [observation=" + observation +
-               "]}";
+        return "[!]\t" + id + "\t:" +
+               " actionSet=" + actionSet.ids() +
+               " fromStates=" + fromStates.ids() +
+               " toStates=" + toStates.ids() +
+               " observation=" + observation;
     }
 
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        State clone = (State) super.clone();
-        clone.id = id;
-        clone.actionSet = (ActionSet) actionSet.clone();
-        clone.observation = observation;
-        clone.fromStates = (StateSet) fromStates.clone();
-        clone.toStates = (StateSet) toStates.clone();
-        return clone;
-    }
 
     @Override
     public boolean equals(Object o) {

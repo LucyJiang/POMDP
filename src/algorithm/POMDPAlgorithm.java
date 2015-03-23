@@ -10,12 +10,14 @@ import java.util.List;
 /**
  * Created by LeoDong on 12/03/2015.
  */
-public abstract class POMDPAlgorithm implements Algorithm<Configuration, Result> {
+public abstract class POMDPAlgorithm
+        implements Algorithm<Configuration, Result> {
     protected Configuration config;
     protected POMDP model;
-    protected Result result;
     protected State currentState;
-    protected List<HistoryRecord> history;
+    protected Result result = new Result();
+    protected List<HistoryRecord> history = new LinkedList<HistoryRecord>();
+
     protected short stage = STAGE_INITIAL;
 
     public List<HistoryRecord> getHistory() {
@@ -25,22 +27,22 @@ public abstract class POMDPAlgorithm implements Algorithm<Configuration, Result>
     @Override
     public boolean input(Configuration config) {
         if (config != null) {
-            if (!config.isConsistant()) {
+            //check consistant of the configuration
+            if (!config.isConsistency()) {
                 return false;
             }
-            this.history = new LinkedList<HistoryRecord>();
-            this.result = new Result();
 
+            /*link references of config and its relative info*/
             this.config = config;
             this.model = config.getModel();
             this.currentState = this.model.getStateSet()
-                    .getState(config.getInitialStateID());
+                                          .getState(config.getInitialStateID());
 
-            //put initial history
+            /* put initial history */
             this.history.add(new HistoryRecord("START",
-                    config.getInitialStateID(),
-                    0,
-                    0));
+                                               config.getInitialStateID(),
+                                               0,
+                                               0));
 
             return true;
         }
@@ -48,25 +50,25 @@ public abstract class POMDPAlgorithm implements Algorithm<Configuration, Result>
     }
 
     @Override
-    public void forward() {
+    public void execute() {
         if (this.getStage() != STAGE_INPUT_FINISH) {
-            throw new AlgorithmException("Input First!");
+            throw new AlgorithmException("Provide input First!");
         }
-        while (/*condition to stop, can use something in config*/ "".equals("")) {
-            Action act = this.step();
+        while (/*condition to stop, can use something in config*/ ""
+                .equals("")) {
 
-            //process history. this part can be put in step();
-            HistoryRecord newHis = HistoryRecord.consume(this.history.get(
-                    this.history.size() - 1), act);
-            this.history.add(newHis);
+            Action act = decide();
+
+            move(act);
+
+            recordHistory(act);
+
         }
 
         this.result = null; //TODO process result
         this.stage = STAGE_EXECUTE_FINISH;
 
     }
-
-    ;
 
     @Override
     public Result getResult() {
@@ -82,11 +84,30 @@ public abstract class POMDPAlgorithm implements Algorithm<Configuration, Result>
     }
 
     @Override
+    /**
+     * Multi-Thread could be only used when 'time' is not important
+     */
     public void run() {
-
+        execute();
     }
 
-    ;
+    /**
+     * Decide which action to conduct, without any modifies on model,
+     * configuration and result
+     *
+     * @return the Action to conduct
+     */
+    protected abstract Action decide();
 
-    protected abstract Action step();
+
+    protected void move(Action move) {
+        this.currentState = move.getToState();
+    }
+
+    protected void recordHistory(Action act) {
+        //process history. this part can be put in decide();
+        HistoryRecord newHis = HistoryRecord.consume(this.history.get(
+                this.history.size() - 1), act);
+        this.history.add(newHis);
+    }
 }

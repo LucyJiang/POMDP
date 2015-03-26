@@ -3,11 +3,11 @@ package algorithm;
 import pomdp.Action;
 
 /**
- * Created by LeoDong on 12/03/2015.
+ *
  */
-public class AlgorithmA extends POMDPAlgorithm {
+public class IP extends POMDPAlgorithm {
 
-    public AlgorithmA() {
+    public IP() {
         super();
     }
 

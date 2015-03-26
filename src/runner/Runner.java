@@ -5,7 +5,7 @@ import pomdp.POMDP;
 import pomdp.State;
 
 /**
- * Created by LeoDong on 07/03/2015.
+ *
  */
 public class Runner {
 

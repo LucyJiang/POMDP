@@ -4,7 +4,7 @@ import pomdp.Action;
 import pomdp.State;
 
 /**
- * Created by LeoDong on 12/03/2015.
+ *
  */
 public class HistoryRecord {
     private String fromID;

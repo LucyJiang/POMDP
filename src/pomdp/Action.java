@@ -4,7 +4,7 @@
 package pomdp;
 
 /**
- * @author LucyJiang
+ *
  */
 public class Action {
     private String id;

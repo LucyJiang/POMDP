@@ -261,7 +261,7 @@ public class POMDP {
             return new POMDP(stateSet,actionSet,discountFactor);
         }
 
-        //TODO LucyJiang finish this function.
+        //TODO
         //	public static POMDP createFromString(String str){
         //        // add states
         //        StateSet states = new StateSet();

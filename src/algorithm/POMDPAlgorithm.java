@@ -1,5 +1,6 @@
 package algorithm;
 
+import exception.AlgorithmException;
 import pomdp.Action;
 import pomdp.POMDP;
 import pomdp.State;
@@ -8,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by LeoDong on 12/03/2015.
+ *
  */
 public abstract class POMDPAlgorithm
         implements Algorithm<Configuration, Result> {
@@ -27,7 +28,7 @@ public abstract class POMDPAlgorithm
     @Override
     public boolean input(Configuration config) {
         if (config != null) {
-            //check consistant of the configuration
+            //check consistency of the configuration
             if (!config.isConsistent()) {
                 return false;
             }

@@ -3,7 +3,6 @@ package algorithm;
 
 /**
  * Algorithm interface, involving input, execute and output
- * Created by LeoDong on 12/03/2015.
  */
 public interface Algorithm<C extends Configuration, O extends Result>
         extends Runnable {

@@ -3,7 +3,7 @@ package algorithm;
 import pomdp.POMDP;
 
 /**
- * Created by LeoDong on 12/03/2015.
+ *
  */
 public class Configuration {
     private POMDP model;

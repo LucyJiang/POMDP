@@ -26,6 +26,8 @@ public class Belief {
         return _this.get(stateID);
     }
 
+    // Set State stateID's belief to double belief
+
     public void setBelief(String stateID,double belief) throws IllegalParameterException{
         if(belief>=1||belief<=0){
             throw new IllegalParameterException("belief should between 0 and 1");

@@ -20,18 +20,22 @@ public class ActionSet {
         return true;
     }
 
+    // check whether the ActionSet contains key id
     public boolean contains(String id) {
         return _this.containsKey(id);
     }
 
+    // Get all the actions in this ActionSet
     public Collection<Action> actions() {
         return _this.values();
     }
 
+    // Get all the ids in this ActionSet
     public Set<String> ids() {
         return _this.keySet();
     }
 
+    // Get all the mappings in this ActionSet
     public Set<Map.Entry<String, Action>> pairs() {
         return _this.entrySet();
     }

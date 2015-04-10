@@ -23,7 +23,8 @@ public class IP extends POMDPAlgorithm {
 
         Action act = null; //TODO the action adapted
         RealVector constants = new ArrayRealVector(new double[] { 1, -2, 1 }, false);
-        constants.
+        RealVector constants = new ArrayRealVector();
+
         return act;
     }
 
@@ -36,7 +37,7 @@ public class IP extends POMDPAlgorithm {
     private ActionSet filter(ActionSet remainAction, StateSet ss) {
         ActionSet winners = new ActionSet();
         Action winner;
-        RealVector infoState
+        RealVector infoState = this.getInfoState(ss);
 
         for (State currentState: ss.states()){
             winner = currentState.getActionSet().getHighestRewardAction();
@@ -46,10 +47,10 @@ public class IP extends POMDPAlgorithm {
             while (!remainAction.actions().isEmpty()){
                 for (Action currentAction: remainAction.actions()){
                     infoState = this.dominate(currentAction,winners);
-                    if (!infoState){
+                    if (infoState.getDimension()==0){//? ??
                         remainAction.removeAction(currentAction.getId());
                     }else {
-                        winner =
+                        winner = remainAction.getWinnerWithObservation();
                     }
                 }
             }
@@ -65,6 +66,14 @@ public class IP extends POMDPAlgorithm {
      */
     private RealVector dominate(Action a, ActionSet as) {
 
+    }
+
+    private RealVector getInfoState(StateSet ss){
+        RealVector infoState = new ArrayRealVector();
+        for (State currentState: ss.states()){
+            infoState.append(currentState.getObservation());
+        }
+        return infoState;
     }
 
 

@@ -49,7 +49,7 @@ public class ActionSet {
     }
 
     public Action getHighestRewardAction(){
-        Action winner=null;
+        Action winner = null;
         double highestReward = -1;
         double currentReward;
 
@@ -58,6 +58,24 @@ public class ActionSet {
             if (currentReward>=highestReward){
                 winner = currentAction;
                 highestReward = currentReward;
+            }
+        }
+        return winner;
+    }
+
+    public Action getWinnerWithObservation(){
+        Action winner = null;
+        double reward;
+        double highestReward = -1;
+        double actionReward;
+        double observation;
+        for (Action currentAction: this.actions()){
+            actionReward = currentAction.getReward();
+            observation = currentAction.getToState().getObservation();
+            reward = actionReward * observation;
+            if(reward>=highestReward){
+                winner=currentAction;
+                highestReward=reward;
             }
         }
         return winner;

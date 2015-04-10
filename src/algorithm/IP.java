@@ -2,12 +2,9 @@ package algorithm;
 
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
-import pomdp.Action;
-import pomdp.ActionSet;
-import pomdp.State;
-import pomdp.StateSet;
+import pomdp.*;
 
-import java.util.Iterator;
+import java.util.Vector;
 
 /**
  *
@@ -37,12 +34,25 @@ public class IP extends POMDPAlgorithm {
      * @return winners, initially empty, is filled with vectors that have non-empty witness regions
      */
     private ActionSet filter(ActionSet remainAction, StateSet ss) {
-        ActionSet winners;
-        Iterator<State> stateIter = ss.states().iterator();
+        ActionSet winners = new ActionSet();
+        Action winner;
+        RealVector infoState
 
-        while(stateIter.hasNext()){
-            State s = stateIter.next();
+        for (State currentState: ss.states()){
+            winner = currentState.getActionSet().getHighestRewardAction();
+            winners.addAction(winner.getId(),winner);
+            remainAction.removeAction(winner.getId());
 
+            while (!remainAction.actions().isEmpty()){
+                for (Action currentAction: remainAction.actions()){
+                    infoState = this.dominate(currentAction,winners);
+                    if (!infoState){
+                        remainAction.removeAction(currentAction.getId());
+                    }else {
+                        winner =
+                    }
+                }
+            }
         }
 
     }
@@ -53,8 +63,9 @@ public class IP extends POMDPAlgorithm {
      *
      * @return
      */
-    private double dominate(Action, ActionSet) {
+    private RealVector dominate(Action a, ActionSet as) {
 
     }
+
 
 }

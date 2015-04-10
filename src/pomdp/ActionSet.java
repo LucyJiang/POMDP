@@ -40,6 +40,30 @@ public class ActionSet {
         return _this.entrySet();
     }
 
+    // [MOD] on 10 Apr start
+    public void removeAction(String id){
+        if(!_this.containsKey(id)){
+            throw new InconsistentException("No action found in the ActionSet for id: "+id);
+        }
+        _this.remove(id);
+    }
+
+    public Action getHighestRewardAction(){
+        Action winner=null;
+        double highestReward = -1;
+        double currentReward;
+
+        for (Action currentAction: this.actions()){
+            currentReward = currentAction.getReward();
+            if (currentReward>=highestReward){
+                winner = currentAction;
+                highestReward = currentReward;
+            }
+        }
+        return winner;
+    }
+    // [MOD] on 10 Apr end
+
     public String toString() {
         List<String> strings = new LinkedList<String>();
         for (Action a : actions()){

@@ -1,6 +1,7 @@
 package pomdp;
 
 import exception.InconsistentException;
+import org.apache.commons.math3.linear.RealVector;
 
 import java.util.*;
 
@@ -58,24 +59,6 @@ public class ActionSet {
             if (currentReward>=highestReward){
                 winner = currentAction;
                 highestReward = currentReward;
-            }
-        }
-        return winner;
-    }
-
-    public Action getWinnerWithObservation(){
-        Action winner = null;
-        double reward;
-        double highestReward = -1;
-        double actionReward;
-        double observation;
-        for (Action currentAction: this.actions()){
-            actionReward = currentAction.getReward();
-            observation = currentAction.getToState().getObservation();
-            reward = actionReward * observation;
-            if(reward>=highestReward){
-                winner=currentAction;
-                highestReward=reward;
             }
         }
         return winner;

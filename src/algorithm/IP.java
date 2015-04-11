@@ -23,7 +23,6 @@ public class IP extends POMDPAlgorithm {
 
         Action act = null; //TODO the action adapted
         RealVector constants = new ArrayRealVector(new double[] { 1, -2, 1 }, false);
-        RealVector constants = new ArrayRealVector();
 
         return act;
     }
@@ -37,7 +36,8 @@ public class IP extends POMDPAlgorithm {
     private ActionSet filter(ActionSet remainAction, StateSet ss) {
         ActionSet winners = new ActionSet();
         Action winner;
-        RealVector infoState = this.getInfoState(ss);
+        RealVector infoState;
+        //infoState = this.getInfoState(ss);
 
         for (State currentState: ss.states()){
             winner = currentState.getActionSet().getHighestRewardAction();
@@ -50,12 +50,14 @@ public class IP extends POMDPAlgorithm {
                     if (infoState.getDimension()==0){//? ??
                         remainAction.removeAction(currentAction.getId());
                     }else {
-                        winner = remainAction.getWinnerWithObservation();
+                        winner = this.getWinnerWithBelief(infoState,remainAction);
+                        winners.addAction(winner.getId(),winner);
+                        remainAction.removeAction(winner.getId());
                     }
                 }
             }
         }
-
+        return winners;
     }
 
     /**
@@ -65,10 +67,10 @@ public class IP extends POMDPAlgorithm {
      * @return
      */
     private RealVector dominate(Action a, ActionSet as) {
-
+        RealVector infoState;
     }
 
-    private RealVector getInfoState(StateSet ss){
+    private RealVector getInfoState (StateSet ss){
         RealVector infoState = new ArrayRealVector();
         for (State currentState: ss.states()){
             infoState.append(currentState.getObservation());
@@ -76,5 +78,32 @@ public class IP extends POMDPAlgorithm {
         return infoState;
     }
 
+    private RealVector getActionRewardVector(ActionSet as){
+        RealVector rewardVector = new ArrayRealVector();
+        for (Action currentAction: as.actions()){
+            rewardVector.append(currentAction.getReward());
+        }
+    }
+
+    public Action getWinnerWithBelief(RealVector infoState, ActionSet as){
+        Action winner = null;
+        double reward;
+        double highestReward = -1;
+        double actionReward;
+        double observation;
+        String toStateId;
+        for (Action currentAction: as.actions()){
+            actionReward = currentAction.getReward();
+            toStateId = currentAction.getToState().getId().substring(1);
+            observation = infoState.getEntry(Integer.parseInt(toStateId));
+            //observation = currentAction.getToState().getObservation();
+            reward = actionReward * observation;
+            if(reward>=highestReward){
+                winner=currentAction;
+                highestReward=reward;
+            }
+        }
+        return winner;
+    }
 
 }

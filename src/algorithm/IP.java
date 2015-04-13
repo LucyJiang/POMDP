@@ -72,7 +72,13 @@ public class IP extends POMDPAlgorithm {
 
     private RealVector getInfoState (StateSet ss){
         RealVector infoState = new ArrayRealVector();
+        double observationAfterAction;
         for (State currentState: ss.states()){
+            for (Action action: currentState.getActionSet().actions()){
+                observationAfterAction = action.getToState().getObservation();
+            }
+
+
             infoState.append(currentState.getObservation());
         }
         return infoState;

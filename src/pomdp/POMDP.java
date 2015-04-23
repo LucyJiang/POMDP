@@ -12,15 +12,14 @@ import java.util.*;
 public class POMDP {
 	
 	private StateSet stateSet;
-    private ActionSet actionSet;
     private double discountFactor;
     private int numberOfAction;
+    private Set<String> actionIds;
 
     private static final int OBSERVATION_PRECISION = 3;//0.xxx
 	
-	private POMDP(StateSet ss, ActionSet as, double discountFactor){
+	private POMDP(StateSet ss, double discountFactor){
 		this.stateSet = ss;
-		this.actionSet = as;
         this.discountFactor =discountFactor;
 	}
 
@@ -32,16 +31,13 @@ public class POMDP {
         return this.stateSet;
     }
 
-    public ActionSet getActionSet(){
-        return this.actionSet;
-    }
 
     public State getState(String id) {
         return stateSet.getState(id);
     }
 
-    public boolean addState(String id, State state) {
-        return stateSet.addState(id, state);
+    public boolean addState(State state) {
+        return stateSet.addState(state);
     }
 
     public boolean containsState(String id) {

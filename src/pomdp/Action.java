@@ -11,8 +11,19 @@ import java.util.TreeMap;
  *
  */
 public class Action {
+    /**
+     * Action id : e.g. a1, a2, a3
+     */
     private String id;
+
+    /**
+     * in state for this action
+     */
     private State in;
+
+    /**
+     * outs for this action
+     */
     private TreeMap<String, ActionOutTriple> outs;
 
     public Action(

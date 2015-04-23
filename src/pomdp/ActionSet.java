@@ -1,7 +1,6 @@
 package pomdp;
 
 import exception.InconsistentException;
-import org.apache.commons.math3.linear.RealVector;
 
 import java.util.*;
 

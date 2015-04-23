@@ -4,8 +4,6 @@ import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
 import pomdp.*;
 
-import java.util.Vector;
-
 /**
  *
  */
@@ -75,7 +73,7 @@ public class IP extends POMDPAlgorithm {
         double observationAfterAction;
         for (State currentState: ss.states()){
             for (Action action: currentState.getActionSet().actions()){
-                observationAfterAction = action.getToState().getObservation();
+                observationAfterAction = action.getToStates().getObservation();
             }
 
 
@@ -100,9 +98,9 @@ public class IP extends POMDPAlgorithm {
         String toStateId;
         for (Action currentAction: as.actions()){
             actionReward = currentAction.getReward();
-            toStateId = currentAction.getToState().getId().substring(1);
+            toStateId = currentAction.getToStates().getId().substring(1);
             observation = infoState.getEntry(Integer.parseInt(toStateId));
-            //observation = currentAction.getToState().getObservation();
+            //observation = currentAction.getToStates().getObservation();
             reward = actionReward * observation;
             if(reward>=highestReward){
                 winner=currentAction;

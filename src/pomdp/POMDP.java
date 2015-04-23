@@ -14,6 +14,7 @@ public class POMDP {
 	private StateSet stateSet;
     private ActionSet actionSet;
     private double discountFactor;
+    private int numberOfAction;
 
     private static final int OBSERVATION_PRECISION = 3;//0.xxx
 	

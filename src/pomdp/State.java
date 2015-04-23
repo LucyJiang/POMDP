@@ -1,43 +1,33 @@
 package pomdp;
 
-public class State {
+public class  State {
     private String id;
     private ActionSet actionSet;
     private double observation;
 
-    private StateSet fromStates;
-    private StateSet toStates;
 
 
     public State(String id, double observation) {
         this.id = id;
         this.actionSet = new ActionSet();
-        this.fromStates = new StateSet();
-        this.toStates = new StateSet();
         this.observation = observation;
 
     }
 
-    public boolean addFromState(State s) {
-        return fromStates.addState(s.id, s);
-    }
-
-    public boolean addToState(State s) {
-        return toStates.addState(s.id, s);
-    }
 
     public boolean addAction(Action action) {
         actionSet.addAction(action.getId(), action);
         return true;
     }
 
-    public StateSet getToStates() {
-        return toStates;
-    }
-
-    public StateSet getFromStates() {
-
-        return fromStates;
+    public StateSet getOutStates() {
+        StateSet ss = new StateSet();
+        for (Action a: this.actionSet.actions()){
+            for (ActionOutTriple aot:a.getOutTriples()){
+                ss.addState(aot.getState());
+            }
+        }
+        return ss;
     }
 
     public ActionSet getActionSet() {
@@ -60,8 +50,6 @@ public class State {
     public String toString() {
         return "[!]\t" + id + "\t:" +
                " actionSet=" + actionSet.ids() +
-               " fromStates=" + fromStates.ids() +
-               " toStates=" + toStates.ids() +
                " observation=" + observation;
     }
 
@@ -75,11 +63,7 @@ public class State {
         if (Double.compare(state.observation, observation) != 0) return false;
         if (actionSet != null ? !actionSet.equals(state.actionSet)
                               : state.actionSet != null) return false;
-        if (fromStates != null ? !fromStates.equals(state.fromStates)
-                               : state.fromStates != null) return false;
         if (id != null ? !id.equals(state.id) : state.id != null) return false;
-        if (toStates != null ? !toStates.equals(state.toStates)
-                             : state.toStates != null) return false;
 
         return true;
     }
@@ -89,8 +73,6 @@ public class State {
         int result;
         long temp;
         result = actionSet != null ? actionSet.hashCode() : 0;
-        result = 31 * result + (fromStates != null ? fromStates.hashCode() : 0);
-        result = 31 * result + (toStates != null ? toStates.hashCode() : 0);
         result = 31 * result + (id != null ? id.hashCode() : 0);
         temp = Double.doubleToLongBits(observation);
         result = 31 * result + (int) (temp ^ (temp >>> 32));

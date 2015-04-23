@@ -12,15 +12,8 @@ public class StateSet {
         return _this.get(id);
     }
 
-    public boolean addState(String id, State state) {
-        if (_this.containsKey(id)) {
-            throw new InconsistentException("Found duplicated state ID: " + id);
-        }
-        if (!id.equals(state.getId())) {
-            throw new InconsistentException(
-                    "Index ID: " + id + " State ID: " + state.getId());
-        }
-        _this.put(id, state);
+    public boolean addState(State state) {
+        _this.put(state.getId(), state);
         return true;
     }
 

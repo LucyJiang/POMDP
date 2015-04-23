@@ -3,29 +3,29 @@
  */
 package pomdp;
 
+import java.util.Collection;
+import java.util.Set;
+import java.util.TreeMap;
+
 /**
  *
  */
 public class Action {
     private String id;
-    private State fromState;
-    private State toState;
-    private double reward;
+    private State in;
+    private TreeMap<String, ActionOutTriple> outs;
 
     public Action(
             String id,
-            State fromState,
-            State toState,
-            double reward) {
+            State inState) {
 
-        this.fromState = fromState;
-        this.toState = toState;
-        this.reward = reward;
         this.id = id;
+        this.in = inState;
+        this.outs = new TreeMap<String, ActionOutTriple>();
+    }
 
-        this.fromState.addAction(this);
-        this.toState.addFromState(this.fromState);
-        this.fromState.addToState(this.toState);
+    public void addOutState(State s, double probability, double reward){
+        this.outs.put(s.getId(),new ActionOutTriple(s,probability,reward));
     }
 
 
@@ -33,23 +33,23 @@ public class Action {
         return id;
     }
 
-    public State getFromState() {
-        return fromState;
+    public State getInState() {
+        return in;
     }
 
-    public State getToState() {
-        return toState;
+    public Collection<ActionOutTriple> getOutTriples() {
+        return outs.values();
     }
 
-    public double getReward() {
-        return reward;
-    }
 
     @Override
     public String toString() {
-        return "[@] "+id+"\t: " + fromState.getId() +
-               "\t==>\t" + toState.getId() +
-               "\t[reward = " + reward + "]";
+        StringBuffer sb = new StringBuffer();
+        sb.append("[@] "+id+"\n");
+        for (ActionOutTriple aot: getOutTriples()){
+            sb.append(aot);
+        }
+        return sb.toString();
     }
 
     @Override
@@ -59,26 +59,21 @@ public class Action {
 
         Action action = (Action) o;
 
-        if (Double.compare(action.reward, reward) != 0) return false;
-        if (fromState != null ? !fromState.equals(action.fromState)
-                              : action.fromState != null) return false;
         if (id != null ? !id.equals(action.id) : action.id != null)
             return false;
-        if (toState != null ? !toState.equals(action.toState)
-                            : action.toState != null) return false;
+        if (in != null ? !in.equals(action.in) : action.in != null)
+            return false;
+        if (outs != null ? !outs.equals(action.outs) : action.outs != null)
+            return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (fromState != null ? fromState.hashCode() : 0);
-        result = 31 * result + (toState != null ? toState.hashCode() : 0);
-        temp = Double.doubleToLongBits(reward);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (in != null ? in.hashCode() : 0);
+        result = 31 * result + (outs != null ? outs.hashCode() : 0);
         return result;
     }
 }

@@ -102,7 +102,7 @@ public abstract class POMDPAlgorithm
 
 
     protected void move(Action move) {
-        this.currentState = move.getToState();
+        this.currentState = move.getToStates();
     }
 
     protected void recordHistory(Action act) {

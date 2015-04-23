@@ -9,15 +9,8 @@ public class ActionSet {
 
     private TreeMap<String,Action> _this = new TreeMap<String, Action>();
 
-    public boolean addAction(String id, Action action) {
-        if (_this.containsKey(id)) {
-            throw new InconsistentException("Found duplicated action ID: " + id);
-        }
-        if (!id.equals(action.getId())) {
-            throw new InconsistentException(
-                    "Index ID: " + id + ", Action ID: " + action.getId());
-        }
-        _this.put(id, action);
+    public boolean addAction(Action action) {
+        _this.put(action.getId(),action);
         return true;
     }
 
@@ -41,7 +34,7 @@ public class ActionSet {
         return _this.entrySet();
     }
 
-    // [MOD] on 10 Apr start
+
     public void removeAction(String id){
         if(!_this.containsKey(id)){
             throw new InconsistentException("No action found in the ActionSet for id: "+id);
@@ -49,21 +42,24 @@ public class ActionSet {
         _this.remove(id);
     }
 
+    /**
+     *
+     * @return null when no action
+     */
     public Action getHighestRewardAction(){
         Action winner = null;
-        double highestReward = -1;
-        double currentReward;
+        double highestReward = Double.MIN_VALUE;
 
         for (Action currentAction: this.actions()){
-            currentReward = currentAction.getReward();
-            if (currentReward>=highestReward){
-                winner = currentAction;
-                highestReward = currentReward;
+            for(ActionOutTriple aot: currentAction.getOutTriples()){
+                if (aot.getProbability()*aot.getReward()>=highestReward){
+                    highestReward = aot.getProbability()*aot.getReward();
+                    winner = currentAction;
+                }
             }
         }
         return winner;
     }
-    // [MOD] on 10 Apr end
 
     public String toString() {
         List<String> strings = new LinkedList<String>();

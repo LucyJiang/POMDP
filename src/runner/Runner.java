@@ -1,8 +1,8 @@
 package runner;
 
-import pomdp.Action;
+import org.apache.commons.math3.linear.ArrayRealVector;
+import org.apache.commons.math3.linear.RealVector;
 import pomdp.POMDP;
-import pomdp.State;
 
 /**
  *
@@ -10,8 +10,12 @@ import pomdp.State;
 public class Runner {
 
     public static void main(String[] args) {
-        POMDP m = POMDP.Factory.createFromFile("data/test1.pomdp");
-        System.out.println(m);
+        RealVector a = new ArrayRealVector(3);
+        a.set(1d/3);
+        System.out.print(a);
+
+//        POMDP m = POMDP.Factory.case1();
+//        System.out.println(m);
 
     }
 

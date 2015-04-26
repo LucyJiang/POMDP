@@ -1,28 +1,57 @@
 package algorithm;
 
 import exception.AlgorithmException;
-import pomdp.Action;
+import org.apache.commons.math3.linear.ArrayRealVector;
+import org.apache.commons.math3.linear.RealVector;
 import pomdp.POMDP;
-import pomdp.State;
 
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- *
- */
+*
+*/
 public abstract class POMDPAlgorithm
-        implements Algorithm<Configuration, Result> {
+        implements Policy<Configuration, Result> {
     protected Configuration config;
     protected POMDP model;
-    protected State currentState;
     protected Result result = new Result();
-    protected List<HistoryRecord> history = new LinkedList<HistoryRecord>();
 
     protected short stage = STAGE_INITIAL;
 
-    public List<HistoryRecord> getHistory() {
-        return history;
+
+    protected List<HistoryRecord> H = new LinkedList<HistoryRecord>();
+    protected RealVector belief;
+
+
+    protected void beliefUpdate(int a, int o){
+        RealVector pb = belief.copy();//previous belief
+        double denominator = 0;
+        for (int s=0;s<model.getS().size();s++){
+            double bs=pb.getEntry(s);
+            double inner = 0d;
+            for (int sp=0;s<model.getS().size();sp++){
+                inner += model.funT(s,a,sp)*model.funO(a,sp,o);
+            }
+            denominator += bs*inner;
+        }
+
+        for (int sp=0;sp<model.getS().size();sp++){
+
+            double sum = 0;
+            for (int s=0;s<model.getS().size();s++){
+                sum += model.funT(s,a,sp)*pb.getEntry(s);
+            }
+            double numerator = model.funO(a,sp,o) * sum;
+
+            this.belief.setEntry(sp,numerator/denominator);
+
+        }
+
+    }
+
+    public List<HistoryRecord> getH() {
+        return H;
     }
 
     @Override
@@ -36,14 +65,13 @@ public abstract class POMDPAlgorithm
             /*link references of config and its relative info*/
             this.config = config;
             this.model = config.getModel();
-            this.currentState = this.model.getStateSet()
-                                          .getState(config.getInitialStateID());
 
-            /* put initial history */
-            this.history.add(new HistoryRecord("START",
-                                               config.getInitialStateID(),
-                                               0,
-                                               0));
+            //initial belief
+            belief = new ArrayRealVector(model.getS().size());
+            belief.set(1d/model.getS().size());
+
+            //TODO initial history
+
 
             return true;
         }
@@ -58,11 +86,11 @@ public abstract class POMDPAlgorithm
         while (/*condition to stop, can use something in config*/ ""
                 .equals("")) {
 
-            Action act = decide();
 
-            move(act);
 
-            recordHistory(act);
+//            move(act);
+//
+//            recordHistory(act);
 
         }
 
@@ -98,17 +126,17 @@ public abstract class POMDPAlgorithm
      *
      * @return the Action to conduct
      */
-    protected abstract Action decide();
-
-
-    protected void move(Action move) {
-        this.currentState = move.getToStates();
-    }
-
-    protected void recordHistory(Action act) {
-        //process history. this part can be put in decide();
-        HistoryRecord newHis = HistoryRecord.consume(this.history.get(
-                this.history.size() - 1), act);
-        this.history.add(newHis);
-    }
+//    protected abstract Action decide();
+//
+//
+//    protected void move(Action move) {
+//        this.currentState = move.getToStates();
+//    }
+//
+//    protected void recordHistory(Action act) {
+//        //process history. this part can be put in decide();
+//        HistoryRecord newHis = HistoryRecord.consume(this.history.get(
+//                this.history.size() - 1), act);
+//        this.history.add(newHis);
+//    }
 }

@@ -1,277 +1,133 @@
 package pomdp;
 
-import exception.InconsistentException;
-import exception.ParseException;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class POMDP {
-	
-	private StateSet stateSet;
-    private double discountFactor;
-    private int numberOfAction;
-    private Set<String> actionIds;
 
-    private static final int OBSERVATION_PRECISION = 3;//0.xxx
-	
-	private POMDP(StateSet ss, double discountFactor){
-		this.stateSet = ss;
-        this.discountFactor =discountFactor;
-	}
+    private List<String> S = new ArrayList<String>(); //NS
+    private List<String> A = new ArrayList<String>(); //NA
+    private List<String> O = new ArrayList<String>(); //NO
+    private int sign = 1;
 
-    public double getDiscountFactor() {
-        return discountFactor;
+    private double discount = 0.99;
+
+    private HashMap<String,RealMatrix> T = new HashMap<String,RealMatrix>(); //NA: NS * NS
+    private HashMap<String,RealMatrix> Z = new HashMap<String,RealMatrix>(); //NA: NS * NO
+    private HashMap<String,RealMatrix> R = new HashMap<String,RealMatrix>(); //NA: NS * NS
+
+    public RealMatrix TforA(String a){
+        return T.get(a);
+    }
+    public RealMatrix TforA(int a){
+        return T.get(A.get(a));
     }
 
-    public StateSet getStateSet(){
-        return this.stateSet;
+    public RealMatrix ZforA(String a){
+        return Z.get(a);
     }
 
-
-    public State getState(String id) {
-        return stateSet.getState(id);
+    public RealMatrix ZforA(int a){
+        return Z.get(A.get(a));
     }
 
-    public boolean addState(State state) {
-        return stateSet.addState(state);
+    public RealMatrix RforA(String a){
+        return R.get(a);
     }
 
-    public boolean containsState(String id) {
-        return stateSet.contains(id);
+    public RealMatrix RforA(int a){
+        return R.get(A.get(a));
     }
 
-    public Collection<State> states() {
-        return stateSet.states();
+    public HashMap<String, RealMatrix> getR() {
+        return R;
     }
 
-    public Set<String> statesIds() {
-        return stateSet.ids();
+    public List<String> getS() {
+        return S;
     }
 
-    public Set<Map.Entry<String, State>> statePairs() {
-        return stateSet.pairs();
+    public List<String> getA() {
+        return A;
     }
 
-    public boolean addAction(String id, Action action) {
-        return actionSet.addAction(id, action);
+    public List<String> getO() {
+        return O;
     }
 
-    public boolean containsAction(String id) {
-        return actionSet.contains(id);
+    public int getSign() {
+        return sign;
     }
 
-    public Collection<Action> actions() {
-        return actionSet.actions();
+    public double getDiscount() {
+        return discount;
     }
 
-    public Set<Map.Entry<String, Action>> actionPairs() {
-        return actionSet.pairs();
+    public HashMap<String, RealMatrix> getT() {
+        return T;
     }
 
-    public Set<String> actionIds() {
-        return actionSet.ids();
+    public HashMap<String, RealMatrix> getZ() {
+        return Z;
+    }
+
+    public double funT(int s, int a, int sp){
+        return this.TforA(a).getEntry(s,sp);
+    }
+
+    public double funO(int a, int sp, int o){
+        return this.ZforA(a).getEntry(sp,o);
     }
 
     @Override
     public String toString() {
-        return "=====STATE SET=====\n"+
-               stateSet+"\n"+
-               "=====ACTION SET====\n"+
-               actionSet+"\n"+
-               "========DF=========\n"+
-               "[%] DF\t: "+discountFactor;
+        final StringBuffer sb = new StringBuffer("POMDP{");
+        sb.append("S=").append(S);
+        sb.append(", A=").append(A);
+        sb.append(", O=").append(O);
+        sb.append(", discount=").append(discount);
+        sb.append("\n T=\n").append(T);
+        sb.append("\n Z=\n").append(Z);
+        sb.append("\n R=\n").append(R);
+        sb.append("\n}");
+        return sb.toString();
     }
 
     public static class Factory{
-        public static POMDP generateRandomly(int noStates){
-            //TODO
-            return null;
+        public static POMDP case1(){
+            POMDP model = new POMDP();
+            model.sign=1;
+            model.discount=0.95;
+
+            model.S.add("s1");
+            model.S.add("s2");
+            model.S.add("s3");
+
+            model.A.add("a1");
+            model.A.add("a2");
+
+            model.O.add("o1");
+            model.O.add("o2");
+
+            double[][] t1 = {{0.1,0.2,0.7},{0.2,0.6,0.2},{0.5,0.1,0.4}};
+            double[][] t2 = {{0.4,0.2,0.4},{0.7,0.1,0.2},{0.2,0.4,0.4}};
+            model.T.put("a1", MatrixUtils.createRealMatrix(t1));
+            model.T.put("a2", MatrixUtils.createRealMatrix(t2));
+
+            double[][] o1 = {{0.1,0.9},{0.2,0.8},{0.5,0.5}};
+            double[][] o2 = {{0.4,0.6},{0.7,0.3},{0.2,0.8}};
+            model.Z.put("o1", MatrixUtils.createRealMatrix(o1));
+            model.Z.put("o2", MatrixUtils.createRealMatrix(o2));
+
+            double[][] r1 = {{5,-5,0},{10,3,-8},{-10,3,3}};
+            double[][] r2 = {{-6,3,2},{3,-6,3},{1,0,-9}};
+            model.R.put("r1", MatrixUtils.createRealMatrix(r1));
+            model.R.put("r2", MatrixUtils.createRealMatrix(r2));
+            return model;
         }
-        public static POMDP createFromFile(String filename){
-            File file = new File(filename);
-            BufferedReader reader = null;
-            StateSet stateSet  = new StateSet();
-            ActionSet actionSet = new ActionSet();
-            double discountFactor = 0;
-            TreeMap<Integer,String> statesString = new TreeMap<Integer,String>();
-            TreeMap<Integer,String> actionsString = new TreeMap<Integer,String>();
-            TreeMap<Integer,String> dfString = new TreeMap<Integer,String>();
-            try{
-                reader = new BufferedReader(new FileReader(file));
-                String tmpString = null;
-                int line =1;
-                while((tmpString = reader.readLine())!=null){
-                    tmpString = tmpString.trim();
-                    if(!tmpString.equals("")){
-                        switch (tmpString.charAt(0)){
-                            case '#':
-                                break;
-                            case '!':
-                                statesString.put(line, tmpString);
-                                break;
-                            case '@':
-                                actionsString.put(line, tmpString);
-                                break;
-                            case '%':
-                                dfString.put(line, tmpString);
-                                break;
-                            default:
-                                throw new ParseException(line,tmpString,"Unknown Syntax");
-                        }
-                    }
-                    line++;
-                }
-            }catch (IOException ioe){
-                ioe.printStackTrace();
-            }finally {
-                if (reader != null){
-                    try{
-                        reader.close();
-                    }catch (IOException ioe){
-
-                    }
-                }
-            }
-            /* States */
-            List<State> needRandomObservation = new LinkedList<State>();
-            int restObservation = (int) Math.pow(10, OBSERVATION_PRECISION);
-            for (Map.Entry<Integer,String> m : statesString.entrySet()){
-                String cmd = m.getValue();
-                Integer line = m.getKey();
-                String[] cmds = cmd.split("\\s+");
-                if (cmds.length < 2 || cmds.length >3){
-                    throw new ParseException(line,cmd,"Syntax Error");
-
-                }else if(cmds.length == 2){
-                    State s = new State(cmds[1],0);
-                    stateSet.addState(cmds[1],s);
-                    needRandomObservation.add(s);
-                }else{
-                    //length == 3
-                    try {
-                        if(cmds[2].length()-cmds[2].lastIndexOf('.')-1>
-                           OBSERVATION_PRECISION){
-                            throw new ParseException(line,cmd,"Illegal Observation Precision, which should be "+
-                                                              OBSERVATION_PRECISION);
-                        }
-                        double ob = Double.parseDouble(cmds[2]);
-                        State s = new State(cmds[1],ob);
-                        stateSet.addState(cmds[1],s);
-
-                        restObservation = restObservation - (int)(ob * Math.pow(10,
-                                                                                  OBSERVATION_PRECISION));
-                        if(restObservation<0){
-                            throw new InconsistentException("The total Observation should not be more than 1");
-                        }
-
-                    }catch (NumberFormatException nfe){
-                        throw new ParseException(line,cmd,"Illegal Observation");
-                    }catch (InconsistentException ie) {
-                        throw new ParseException(line,
-                                                 cmd,
-                                                 "Inconsistent:" + ie.getMessage());
-                    }
-                }
-            }
-            int sizeOfNeedRandom = needRandomObservation.size();
-            for(int i = 0;i<sizeOfNeedRandom;i++){
-                State current = needRandomObservation.get(i);
-                if(i==sizeOfNeedRandom-1){
-                    current.setObservation(restObservation/(Math.pow(10.0,
-                                                                      OBSERVATION_PRECISION)));
-                    restObservation = 0;
-                }else{
-                    double randvalue = Math.floor(Math.random()*restObservation);
-                    current.setObservation(randvalue/Math.pow(10.0,
-                                                              OBSERVATION_PRECISION));
-                    restObservation = restObservation-(int)randvalue;
-                }
-            }
-            if(restObservation!= 0){
-                throw new InconsistentException("The total Observation should be 1.");
-            }
-
-            /* Actions */
-            for (Map.Entry<Integer,String> m : actionsString.entrySet()){
-                String cmd = m.getValue();
-                Integer line = m.getKey();
-                String[] cmds = cmd.split("\\s+");
-                if (cmds.length != 5 ){
-                    throw new ParseException(line,cmd,"Syntax Error");
-
-                }else{
-                    //length == 4
-                    try {
-                        double reward = Double.parseDouble(cmds[4]);
-                        State from = stateSet.getState(cmds[2]);
-                        if(from==null){
-                            throw new ParseException(line,cmd,"Unknown from State:"+cmds[2]);
-                        }
-                        State to = stateSet.getState(cmds[3]);
-                        if(to==null){
-                            throw new ParseException(line,cmd,"Unknown to State:"+cmds[3]);
-                        }
-                        Action a = new Action(cmds[1],from, to, reward);
-                        actionSet.addAction(a.getId(), a);
-
-                    }catch (NumberFormatException nfe){
-                        throw new ParseException(line,cmd,"Illegal Observation");
-                    }catch (InconsistentException ie) {
-                        throw new ParseException(line,
-                                                 cmd,
-                                                 "Inconsistant:" + ie.getMessage());
-                    }
-                }
-            }
-
-            /* Discount Factor */
-            if(dfString.size()!=1){
-                throw new InconsistentException("Too many discount factor declarations on lines:"+dfString.keySet());
-            }else{
-                //length == 1
-                for (Map.Entry<Integer,String> m : dfString.entrySet()){
-                    String cmd = m.getValue();
-                    Integer line = m.getKey();
-                    String[] cmds = cmd.split("\\s+");
-                    if (cmds.length != 2 ){
-                        throw new ParseException(line,cmd,"Syntax Error");
-
-                    }else{
-                        //length == 2
-                        try {
-                            double value = Double.parseDouble(cmds[1]);
-                            if(value<=0||value>=1){
-                                throw new ParseException(line,cmd,"Discount Factor should between 0 and 1");
-                            }
-                            discountFactor = value;
-
-                        }catch (NumberFormatException nfe){
-                            throw new ParseException(line,cmd,"Illegal Discount Factor");
-                        }
-                    }
-                }
-            }
-            return new POMDP(stateSet,actionSet,discountFactor);
-        }
-
-        //TODO
-        //	public static POMDP createFromString(String str){
-        //        // add states
-        //        StateSet states = new StateSet();
-        //        states.addState("1", new State("1",0.2));
-        //        states.addState("2", new State("2",0.5));
-        //        System.out.println(states.getState("1"));
-        //        System.out.println(states.getState("2"));
-        //        new Action("a1",states.getState("1"), states.getState("2"),20).consistent();
-        //        // add actions
-        //		return new POMDP(states,0.2);
-        //	}
-
     }
-
-
 }

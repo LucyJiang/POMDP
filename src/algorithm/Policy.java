@@ -2,9 +2,9 @@ package algorithm;
 
 
 /**
- * Algorithm interface, involving input, execute and output
- */
-public interface Algorithm<C extends Configuration, O extends Result>
+* Algorithm interface, involving input, execute and output
+*/
+public interface Policy<C extends Configuration, O extends Result>
         extends Runnable {
 
     public static final short STAGE_INITIAL = 0;

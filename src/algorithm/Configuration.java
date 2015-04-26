@@ -1,17 +1,19 @@
 package algorithm;
 
+import org.apache.commons.math3.linear.ArrayRealVector;
+import org.apache.commons.math3.linear.RealVector;
 import pomdp.POMDP;
 
 /**
- *
- */
+*
+*/
 public class Configuration {
     private POMDP model;
-    private String initialStateID;
+    private String initialState;
 
-    public Configuration(POMDP model, String initialStateID) {
+    public Configuration(POMDP model, String initialState) {
         this.model = model;
-        this.initialStateID = initialStateID;
+        this.initialState = initialState;
     }
 
     public POMDP getModel() {
@@ -19,7 +21,7 @@ public class Configuration {
     }
 
     public String getInitialStateID() {
-        return initialStateID;
+        return initialState;
     }
 
     /**
@@ -30,10 +32,10 @@ public class Configuration {
      * @return @code{true} iff configuration is consistent
      */
     public boolean isConsistent(){
-        if (model==null || initialStateID==null){
+        if (model==null || initialState==null){
             return false;
         }
-        if (!model.getStateSet().contains(initialStateID)){
+        if (!model.getS().contains(this.initialState)){
             return false;
         }
         return true;

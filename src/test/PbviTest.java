@@ -2,6 +2,7 @@ package test;
 
 import model.POMDPImp;
 
+import org.gnu.glpk.GLPK;
 import solver.Criteria;
 import solver.MaxIterationsCriteria;
 import solver.vi.ValueConvergenceCriteria;
@@ -16,7 +17,8 @@ public class PbviTest {
 	 * @throws Exception 
 	 */
 	public static void main(String[] args) throws Exception {
-		//tiger/tiger.95.POMDP
+        System.out.println( GLPK.glp_version());
+        //tiger/tiger.95.POMDP
 		POMDPImp pomdp=(POMDPImp)POMDPImp.Factory.parse("test.POMDP");
         System.out.println(pomdp);
 		double epsi=1e-6*(1-pomdp.gamma())/(2*pomdp.gamma());

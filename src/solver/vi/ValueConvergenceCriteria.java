@@ -1,7 +1,6 @@
 package solver.vi;
 
 import common.AlphaVector;
-import common.CustomVector;
 import common.ValueFunction;
 import common.ValueFunctionImp;
 import model.Vector;

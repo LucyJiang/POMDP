@@ -17,7 +17,7 @@ public class PerseusDynamicTest {
 	 */
 	public static void main(String[] args) throws Exception {
 		//tiger/tiger.95.POMDP
-        POMDPImp pomdp=(POMDPImp)POMDPImp.Factory.parse("data/test.POMDP");
+        POMDPImp pomdp=(POMDPImp)POMDPImp.Factory.parse("test.POMDP");
         double epsi=1e-6*(1-pomdp.gamma())/(2*pomdp.gamma());
 		PbParams params=new PbParams(PbParams.BACKUP_ASYNC_FULL,PbParams.EXPAND_RANDOM_EXPLORE_DYNAMIC,1,100,100);
 		PointBasedStd algo= new PointBasedStd(pomdp,params);

@@ -107,6 +107,11 @@ public class BeliefMdpImp implements BeliefMdp {
         return pom.stateName(s);
     }
 
+    @Override
+    public int getRandomAction() {
+        return pom.getRandomAction();
+    }
+
     public double getRewardMax() {
         return (pom.getRewardMax());
     }
@@ -133,7 +138,6 @@ public class BeliefMdpImp implements BeliefMdp {
 
 
     public RealMatrix getTau(int a, int o) {
-        System.out.println("!"+a+"  "+o);
         return (tau[o][a].copy());
     }
 

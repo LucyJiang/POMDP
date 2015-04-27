@@ -9,7 +9,7 @@
 package model;
 
 import common.BeliefState;
-import common.CustomVector;
+import common.BeliefStateImp;
 import org.apache.commons.math3.linear.RealMatrix;
 
 
@@ -71,5 +71,9 @@ public interface POMDP {
 	@param s the state
  	@return the name of the state*/
     public String stateName(int s);
+
+    public int getRandomAction();
+
+    public int getRandomObservation(BeliefStateImp bel, int a);
 
 }

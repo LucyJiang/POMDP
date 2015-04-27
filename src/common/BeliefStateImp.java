@@ -73,7 +73,7 @@ public class BeliefStateImp implements BeliefState {
 
 
     public BeliefState copy() {
-	return (new BeliefStateImp(belief,poba));
+	    return (new BeliefStateImp(belief,poba));
     }
 
 

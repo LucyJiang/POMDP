@@ -245,8 +245,8 @@ public class PointBasedStd extends ValueIterationStd {
                                                       POMDP bmdp) {
 		BeliefStateImp b=(BeliefStateImp) testBset.remove(0);
 		BeliefStateImp bprime;
-		int a = ((POMDPImp)bmdp).getRandomAction();
-		int o = ((POMDPImp)bmdp).getRandomObservation(b, a);
+		int a = bmdp.getRandomAction();
+		int o = bmdp.getRandomObservation(b, a);
 		bprime = (BeliefStateImp) bmdp.nextBeliefState(b, a, o);
 		return bprime;
 	}

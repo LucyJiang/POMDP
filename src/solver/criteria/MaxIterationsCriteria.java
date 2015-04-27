@@ -1,4 +1,6 @@
-package solver;
+package solver.criteria;
+
+import solver.iteration.Iteration;
 
 public class MaxIterationsCriteria extends Criteria {
 
@@ -10,7 +12,7 @@ public class MaxIterationsCriteria extends Criteria {
 	
 	@Override
 	public boolean check(Iteration i) {
-		if (i.getStats().iterations < max_iter)
+		if (i.getTimer().getIterNumber() < max_iter)
 			return false;
 		return true;
 	}

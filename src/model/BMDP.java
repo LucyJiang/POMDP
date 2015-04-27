@@ -6,12 +6,12 @@ the future if a MDP interface is defined.
 @author Mauricio Araya
 */
 
-package common;
+package model;
 
-import model.POMDP;
+import common.AlphaVector;
 import org.apache.commons.math3.linear.RealMatrix;
 
-public interface BeliefMdp extends POMDP {
+public interface BMDP extends POMDP {
     
     /** Obtain the POMDP for which the belief MDP was calculated. 
 	@return the POMDP reference
@@ -23,4 +23,6 @@ public interface BeliefMdp extends POMDP {
 	@param a the action
 	@param o the observation*/
     public RealMatrix getTau(int a,int o);
+
+    public AlphaVector projection(AlphaVector alpha, int a, int o);
 }

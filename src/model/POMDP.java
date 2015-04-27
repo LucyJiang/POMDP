@@ -10,6 +10,7 @@ package model;
 
 import common.BeliefState;
 import common.BeliefStateImp;
+import common.ValueFunctionImp;
 import org.apache.commons.math3.linear.RealMatrix;
 
 
@@ -76,4 +77,11 @@ public interface POMDP {
 
     public int getRandomObservation(BeliefStateImp bel, int a);
 
+    public double getRewardMax();
+
+    public double getRewardMin();
+
+    public double getRewardMaxMin();
+
+    public ValueFunctionImp getRewardValueFunction(int a);
 }

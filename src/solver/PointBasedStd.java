@@ -1,19 +1,19 @@
-package solver.pb;
+package solver;
 
 import common.AlphaVector;
 import common.BeliefState;
 import model.POMDP;
-import common.BeliefMdpImp;
+import model.BMDP;
+import model.BMDPImp;
 import common.BeliefStateImp;
-import model.POMDPImp;
 import common.ValueFunctionImp;
 import model.Vector;
-import solver.IterationStats;
-import solver.vi.ValueIterationStd;
+import solver.iteration.Timer;
+import solver.iteration.ValueIterationStd;
 
 public class PointBasedStd extends ValueIterationStd {
 	
-	BeliefMdpImp bmdp;
+	BMDP bmdp;
 	PointSet fullBset;
 	PointSet newBset;
 	PbParams params;
@@ -24,17 +24,17 @@ public class PointBasedStd extends ValueIterationStd {
 		return(new AlphaVector(new Vector(bmdp.numS(),best_val),-1));
 	}
 	
-	public PointBasedStd(POMDPImp pomdp,PbParams params){
+	public PointBasedStd(POMDP pomdp,PbParams params){
 		startTimer();
 		initValueIteration(pomdp);
 		this.params=params;
-		bmdp=new BeliefMdpImp(pomdp);
+		bmdp=new BMDPImp(pomdp);
 		current = new ValueFunctionImp(pomdp.numS());
 		current.push(getLowestAlpha());
-		registerInitTime();
+		writeInitTime();
 	}
 	
-	public IterationStats iterate() {
+	public Timer iterate() {
 		startTimer();
 		old=current;
 		expand();
@@ -47,7 +47,7 @@ public class PointBasedStd extends ValueIterationStd {
 			fullBset=newBset;
 		//System.out.println(current);
 		registerValueIterationStats();
-    	return iterationStats;
+    	return timer;
 	}
 
 	protected void backup(){
@@ -195,8 +195,7 @@ public class PointBasedStd extends ValueIterationStd {
 				double sum_err=0;
 				for (int o=0;o<bmdp.numO();o++){
 					double err=bmdp.getTau(a, o).operate(b.getPoint()).getL1Norm();
-					double tttt = minError(bmdp.nextBeliefState(b, a, o),testBset);
-                    err*=minError(bmdp.nextBeliefState(b, a, o),testBset);
+					err*=minError(bmdp.nextBeliefState(b, a, o),testBset);
 					sum_err+=err;
 				}
 				

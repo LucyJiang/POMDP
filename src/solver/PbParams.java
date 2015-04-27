@@ -1,4 +1,4 @@
-package solver.pb;
+package solver;
 
 public class PbParams {
 	protected int backupMethod;

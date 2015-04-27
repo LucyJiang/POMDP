@@ -1,16 +1,12 @@
-package solver.vi;
+package solver.iteration;
 
 import java.util.ArrayList;
 
-import model.POMDP;
-import solver.IterationStats;
-
-public class ValueIterationStats extends IterationStats {
+public class ValueIterationTimer extends Timer {
 	
 	public long total_lp_time;
 	
-	public ValueIterationStats(POMDP POMDP){
-		super(POMDP);
+	public ValueIterationTimer(){
 		iteration_vector_count=new ArrayList<Integer>();
 		total_lp_time=0;
 	}
@@ -19,18 +15,18 @@ public class ValueIterationStats extends IterationStats {
 		total_lp_time+=iTime;
 	}
 	
-	/*public int register(long iTime,int nVects) {
+	/*public int writeTimeRecords(long iTime,int nVects) {
 		iteration_vector_count.add(new Integer(nVects));
-		register(iTime);
-		return(iterations);
+		writeTimeRecords(iTime);
+		return(iterCounter);
 	}*/
 	
 	public String toString(){
-		String retval=super.toString();
-		retval+=      "last vector count  = ";
+		String ret=super.toString();
+		ret+=      "last vector count  = ";
 		Integer i=iteration_vector_count.get(iteration_vector_count.size()-1);
-		retval+=i + "\n";
-		return retval;
+		ret+=i + "\n";
+		return ret;
 	}
 	
 	public ArrayList<Integer> iteration_vector_count;

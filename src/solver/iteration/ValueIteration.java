@@ -1,13 +1,11 @@
-package solver.vi;
+package solver.iteration;
 
 import common.ValueFunction;
-import solver.Iteration;
-import solver.IterationStats;
 
 public abstract class ValueIteration extends Iteration {
 	
-	public IterationStats getStats() {
-		return(iterationStats);
+	public Timer getTimer() {
+		return(timer);
 	}
 	
 	public abstract void registerValueIterationStats();

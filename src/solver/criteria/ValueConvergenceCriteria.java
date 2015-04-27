@@ -1,11 +1,11 @@
-package solver.vi;
+package solver.criteria;
 
 import common.AlphaVector;
 import common.ValueFunction;
 import common.ValueFunctionImp;
 import model.Vector;
-import solver.Criteria;
-import solver.Iteration;
+import solver.iteration.Iteration;
+import solver.iteration.ValueIteration;
 
 public class ValueConvergenceCriteria extends Criteria {
 
@@ -19,7 +19,7 @@ public class ValueConvergenceCriteria extends Criteria {
 		ValueFunction newv=vi.getValueFunction();
 		ValueFunction oldv=vi.getOldValueFunction();
 		if (oldv==null  || newv.size()!=oldv.size()){
-			System.out.println("Eval(" + i.getStats().iterations + ") = Inf");
+			System.out.println("Eval(" + i.getTimer().getIterNumber() + ") = Inf");
 			return false;
 		}
 		((ValueFunctionImp)newv).sort();
@@ -29,7 +29,7 @@ public class ValueConvergenceCriteria extends Criteria {
 			AlphaVector newAlpha=newv.getAlphaVector(j);
 			AlphaVector oldAlpha=oldv.getAlphaVector(j);
 			if (newAlpha.getAction()!=oldAlpha.getAction()){
-				System.out.println("Eval(" + i.getStats().iterations + ") = Inf");
+				System.out.println("Eval(" + i.getTimer().getIterNumber() + ") = Inf");
 				return false;
 			}
 			Vector perf= new Vector(newAlpha.getVectorCopy().mapMultiply(-1.0).add(oldAlpha.getVectorRef()));
@@ -45,8 +45,8 @@ public class ValueConvergenceCriteria extends Criteria {
 			if (a_value > conv)
 				conv=a_value;
 		}
-		System.out.println("Eval(" + i.getStats().iterations + ") = " + conv);
-		if (conv <= epsilon && i.getStats().iterations > MIN_ITERATIONS)
+		System.out.println("Eval(" + i.getTimer().getIterNumber() + ") = " + conv);
+		if (conv <= epsilon && i.getTimer().getIterNumber() > MIN_ITERATIONS)
 			return(true);
 		return false;
  	}

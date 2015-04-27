@@ -10,37 +10,43 @@
  * W3: http://www.cs.uic.edu/~dmanilof
  --------------------------------------------------------------------------- */
 
-package solver.bounds;
+package solver;
 
 // imports
 
 import common.AlphaVector;
-import model.POMDPImp;
+import model.POMDP;
 import common.ValueFunctionImp;
-import solver.IterationStats;
-import solver.vi.ValueIterationStd;
+import model.Vector;
+import solver.iteration.Timer;
+import solver.iteration.ValueIterationStd;
 
 public class QmdpStd extends ValueIterationStd {
     
 	public AlphaVector Vt;
 	
-	public QmdpStd(POMDPImp pomdp){
+	public QmdpStd(POMDP pomdp){
 		startTimer();
 		initValueIteration(pomdp);
 		current=new ValueFunctionImp(pomdp.numS());
 		for(int a=0; a<pomdp.numA(); a++)
 		    current.push(new AlphaVector(pomdp.numS(),a));
 		Vt=new AlphaVector(pomdp.numS());
-		registerInitTime();
+		writeInitTime();
 	}
-	
+
+
 	@Override
-	public IterationStats iterate() {
+	public Timer iterate() {
 		startTimer();
 		old=current.copy();
 		current=new ValueFunctionImp(pomdp.numS());
 		for(int a=0; a<pomdp.numA(); a++){
-			AlphaVector res=pomdp.mdpValueUpdate(Vt, a);
+            //mdpValueUpdate
+            Vector vec = new Vector(pomdp.TforA(a).scalarMultiply(pomdp.gamma()).operate(Vt.getVectorRef()));
+            vec = new Vector(vec.add(pomdp.getRewardValueFunction(a).getAlphaVector(0).getVectorRef()));
+            AlphaVector res=new AlphaVector(vec, a);
+
     	    current.push(res);
     	}
 		for (int s=0;s<pomdp.numS();s++){
@@ -53,6 +59,6 @@ public class QmdpStd extends ValueIterationStd {
 			Vt.setValue(s, colmax);
 		}
 		registerValueIterationStats();
-    	return iterationStats;
+    	return timer;
 	}
 } // qmdpFlat

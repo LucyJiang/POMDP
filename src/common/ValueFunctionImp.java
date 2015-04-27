@@ -23,12 +23,7 @@ import org.gnu.glpk.glp_prob;
 import org.gnu.glpk.glp_smcp;
 
 
-public class ValueFunctionImp implements ValueFunction, Serializable {
-    
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 999938545519704337L;
+public class ValueFunctionImp implements ValueFunction {
 
 	// ------------------------------------------------------------------------
     // properties
@@ -61,11 +56,11 @@ public class ValueFunctionImp implements ValueFunction, Serializable {
 
 	// list of actions associated with each alpha
     public int[] getActions() {
-    	int [] retval=new int[size()];
+    	int [] ret=new int[size()];
     	for (int i=0;i<size();i++){
-    		retval[i]=getAction(i);
+    		ret[i]=getAction(i);
     	}
-    	return(retval);
+    	return(ret);
     }
 
     // return value of a belief state
@@ -122,16 +117,16 @@ public class ValueFunctionImp implements ValueFunction, Serializable {
 	}
 	
     public String toString(){
-    	String retval="Value Function\n";
+    	String ret="Value Function\n";
     	for (int i=0;i<size();i++){
-    		retval+="v"+i+"\t[";
+    		ret+="v"+i+"\t[";
             Vector v=getAlphaValues(i);
     		for (int j=0;j<v.getDimension();j++){
-    			retval+=v.getEntry(j)+" ";
+    			ret+=v.getEntry(j)+" ";
     		}
-    		retval+="] a="+getAlphaAction(i)+"\n";
+    		ret+="] a="+getAlphaAction(i)+"\n";
     	}
-    	return retval;
+    	return ret;
     }
     
     public long prune(){

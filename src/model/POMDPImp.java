@@ -190,13 +190,6 @@ public class POMDPImp implements POMDP {
     }
 
 
-    public AlphaVector mdpValueUpdate(AlphaVector alpha, int a) {
-        Vector vec = new Vector(TforA(a).scalarMultiply(gamma()).operate(alpha.getVectorRef()));
-        vec = new Vector(vec.add(getRewardValueFunction(a).getAlphaVector(0).getVectorRef()));
-        return (new AlphaVector(vec, a));
-    }
-
-
     //TODO
     public ValueFunctionImp getRewardValueFunction(int a) {
         ValueFunctionImp vf = new ValueFunctionImp(numS());

@@ -1,4 +1,6 @@
-package solver;
+package solver.criteria;
+
+import solver.iteration.Iteration;
 
 public abstract class Criteria {
 	public static final int CC_MAXEUCLID=1;

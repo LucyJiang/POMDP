@@ -1,35 +1,37 @@
-package solver.exact;
+package solver;
 
 import java.util.ArrayList;
 
 import common.AlphaVector;
-import common.BeliefMdpImp;
-import model.POMDPImp;
+import model.BMDPImp;
+import model.BMDP;
+import model.POMDP;
 import common.ValueFunctionImp;
-import solver.IterationStats;
-import solver.vi.ValueIterationStats;
-import solver.vi.ValueIterationStd;
+import solver.iteration.Timer;
+import solver.iteration.ValueIterationStd;
+import solver.iteration.ValueIterationTimer;
 
 
 public class IncrementalPruningStd extends ValueIterationStd {
 
-	BeliefMdpImp bmdp;
+	BMDP bmdp;
 	private double delta;
 
-	public IncrementalPruningStd(POMDPImp pomdp, double delta){
+	public IncrementalPruningStd(POMDP pomdp, double delta){
 		startTimer();
 		initValueIteration(pomdp);
 		this.delta=delta;
-		bmdp=new BeliefMdpImp(pomdp);
+		bmdp=new BMDPImp(pomdp);
 		current = new ValueFunctionImp(pomdp.numS());
 		current.push(new AlphaVector(bmdp.numS()));
-		registerInitTime();
+		writeInitTime();
 	}
 
-	public IterationStats iterate() {
+	public Timer iterate() {
 		startTimer();
 		old=current;
-		ValueIterationStats iterationStats=(ValueIterationStats) this.iterationStats;
+		ValueIterationTimer
+                iterationStats=(ValueIterationTimer) this.timer;
 		current = new ValueFunctionImp(bmdp.numS());
 		for(int a=0; a<bmdp.numA(); a++){
 			// Perform Projections

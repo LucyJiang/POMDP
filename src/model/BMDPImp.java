@@ -1,20 +1,19 @@
-package common;
+package model;
 
-import model.POMDP;
-import model.POMDPImp;
-import model.Vector;
+import common.AlphaVector;
+import common.BeliefState;
+import common.BeliefStateImp;
+import common.ValueFunctionImp;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 
-import java.io.Serializable;
+public class BMDPImp implements BMDP {
 
-public class BeliefMdpImp implements BeliefMdp {
-
-    POMDPImp pom;
+    POMDP pomdp;
     RealMatrix tau[][];
 
-    public BeliefMdpImp(POMDPImp pom) {
-        this.pom = pom;
+    public BMDPImp(POMDP pomdp) {
+        this.pomdp = pomdp;
         init();
     }
 
@@ -44,96 +43,96 @@ public class BeliefMdpImp implements BeliefMdp {
 
     @Override
     public double expectedImmediateReward(BeliefState b, int a) {
-        return pom.expectedImmediateReward(b, a);
+        return pomdp.expectedImmediateReward(b, a);
     }
 
     @Override
     public Vector observationProbabilities(BeliefState bel, int a) {
-        return pom.observationProbabilities(bel, a);
+        return pomdp.observationProbabilities(bel, a);
     }
 
     @Override
     public RealMatrix TforA(int a) {
-        return pom.TforA(a);
+        return pomdp.TforA(a);
     }
 
     @Override
     public RealMatrix ZforA(int a) {
-        return pom.ZforA(a);
+        return pomdp.ZforA(a);
     }
 
     @Override
     public Vector RforA(int a) {
-        return pom.RforA(a);
+        return pomdp.RforA(a);
     }
 
     @Override
     public BeliefState getInitBeliefState() {
-        return pom.getInitBeliefState();
+        return pomdp.getInitBeliefState();
     }
 
     @Override
     public int numS() {
-        return pom.numS();
+        return pomdp.numS();
     }
 
     @Override
     public int numA() {
-        return pom.numA();
+        return pomdp.numA();
     }
 
     @Override
     public int numO() {
-        return pom.numO();
+        return pomdp.numO();
     }
 
     @Override
     public double gamma() {
-        return pom.gamma();
+        return pomdp.gamma();
     }
 
     @Override
     public String actionName(int a) {
-        return pom.actionName(a);
+        return pomdp.actionName(a);
     }
 
     @Override
     public String observationName(int o) {
-        return pom.observationName(o);
+        return pomdp.observationName(o);
     }
 
     @Override
     public String stateName(int s) {
-        return pom.stateName(s);
+        return pomdp.stateName(s);
     }
 
     @Override
     public int getRandomAction() {
-        return pom.getRandomAction();
+        return pomdp.getRandomAction();
     }
 
     public double getRewardMax() {
-        return (pom.getRewardMax());
+        return (pomdp.getRewardMax());
     }
 
     public double getRewardMin() {
-        return (pom.getRewardMin());
+        return (pomdp.getRewardMin());
     }
 
     public double getRewardMaxMin() {
-        return (pom.getRewardMaxMin());
+        return (pomdp.getRewardMaxMin());
     }
 
     public int getRandomObservation(BeliefStateImp bel, int a) {
-        return pom.getRandomObservation(bel, a);
+        return pomdp.getRandomObservation(bel, a);
     }
 
     public ValueFunctionImp getRewardValueFunction(int a) {
-        return pom.getRewardValueFunction(a);
+        return pomdp.getRewardValueFunction(a);
     }
 
     public POMDP getPomdp() {
-        return pom;
+        return pomdp;
     }
 
 

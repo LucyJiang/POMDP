@@ -14,5 +14,4 @@ public class Utils {
 
     //  set the random only once for every instance
     public static final Random random = new Random(System.currentTimeMillis());
-
 } // Utils

@@ -1,4 +1,4 @@
-package solver.pb;
+package solver;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -68,24 +68,24 @@ public class PointSet implements Iterable<BeliefState> {
 	}
 
 	public PointSet copy() {
-		PointSet retval = new PointSet();
+		PointSet ret = new PointSet();
 		for (BeliefState bel:set){
-			retval.add(bel.copy());
+			ret.add(bel.copy());
 		}
-		return retval;
+		return ret;
 	}
 	
 	public String toString(){
-    	String retval="Point Set\n";
+    	String ret="Point Set\n";
     	for (int i=0;i<size();i++){
-    		retval+="p"+i+"\t[";
+    		ret+="p"+i+"\t[";
     		Vector v=set.get(i).getPoint();
     		for (int j=0;j<v.getDimension();j++){
-    			retval+=v.getEntry(j)+" ";
+    			ret+=v.getEntry(j)+" ";
     		}
-    		retval+="]\n";
+    		ret+="]\n";
     	}
-    	return retval;
+    	return ret;
     }
 	
 }

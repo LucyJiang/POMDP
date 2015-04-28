@@ -37,8 +37,7 @@ public class BMDPImp implements BMDP {
 
     public BeliefState nextBeliefState(BeliefState b, int a, int o) {
         Vector vect = new Vector(tau[o][a].operate(b.getPoint()));
-        if(vect.getL1Norm()!=0)
-            vect.scale(1.0 / vect.getL1Norm());
+        vect.scale(1.0 / vect.getL1Norm());
         return (new BeliefStateImp(vect));
     }
 

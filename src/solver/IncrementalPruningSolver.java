@@ -29,8 +29,6 @@ public class IncrementalPruningSolver extends ValueIterationSolver {
 	public void iterate() {
 		this.getTimer().start();
 		old=current;
-		ValueIterationTimer
-                iterationStats=(ValueIterationTimer) this.timer;
 		current = new ValueFunctionImp(bmdp.numS());
 		for(int a=0; a<bmdp.numA(); a++){
 			// Perform Projections
@@ -42,24 +40,24 @@ public class IncrementalPruningSolver extends ValueIterationSolver {
 					AlphaVector res=bmdp.projection(alpha, a, o);
 					proj.push(res);
 				}
-				iterationStats.registerLp(proj.prune(delta));
+                ((ValueIterationTimer)this.getTimer()).registerLp(proj.prune(delta));
 				psi.add(proj);
 			}
 			ValueFunctionImp rewFunc=bmdp.getRewardValueFunction(a);
-			//rewFunc.scale(1.0/(double)bmdp.numO());
 			psi.add(rewFunc);
-			//Now Cross sum...
+
+			//Calculate Cross Sum
 			while (psi.size()>1){
 				ValueFunctionImp vfA=psi.remove(0);
 				ValueFunctionImp vfB=psi.remove(0);
 				vfA.crossSum(vfB);
-				iterationStats.registerLp(vfA.prune(delta));
+                ((ValueIterationTimer)this.getTimer()).registerLp(vfA.prune(delta));
 				psi.add(vfA);
 			}
 			ValueFunctionImp vfA=psi.remove(0);
 			current.merge(vfA);
 		}
-		iterationStats.registerLp(current.prune(delta));
+        ((ValueIterationTimer)this.getTimer()).registerLp(current.prune(delta));
         recordVectorCount();
         this.getTimer().recordIterTime();
 	}

@@ -254,16 +254,26 @@ public class POMDPImp implements POMDP {
         sb.append("A: "+A+"\n");
         sb.append("O: "+O+"\n");
         for (int a=0; a< numA(); a++){
-            sb.append("T["+actionName(a)+"]:\n "+TforA(a)+"\n");
+            sb.append("T["+actionName(a)+"]:\n ");
+            int s = 0;
+            for (;s< numS()-1;s++){
+                sb.append(TforA(a).getRowVector(s)+"\n ");
+            }
+            sb.append(TforA(a).getRowVector(s)+"\n");
         }
         for (int a=0; a< numA(); a++){
-            sb.append("Z["+actionName(a)+"]:\n "+ZforA(a)+"\n");
+            sb.append("Z["+actionName(a)+"]:\n ");
+            int s = 0;
+            for (;s< numS()-1;s++){
+                sb.append(ZforA(a).getRowVector(s)+"\n ");
+            }
+            sb.append(ZforA(a).getRowVector(s)+"\n");
         }
         for (int a=0; a< numA(); a++){
             sb.append("R["+actionName(a)+"]:\n "+RforA(a)+"\n");
         }
-        sb.append("Initial Belief: "+initBelief.getPoint()+"\n");
-        sb.append("======================\n");
+        sb.append("Initial Belief: \n "+initBelief.getPoint()+"\n");
+        sb.append("======================");
         return sb.toString();
     }
 
@@ -377,6 +387,9 @@ public class POMDPImp implements POMDP {
                     }
                     model.R.put(model.A.indexOf(action),new Vector(r));
                 }
+            }
+            if(model.initBelief==null){
+                model.initBelief = BeliefStateImp.generateRandom(model.numS());
             }
             return model;
         }

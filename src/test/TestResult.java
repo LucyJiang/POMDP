@@ -16,6 +16,7 @@ public class TestResult {
     private String testName;
     private long initTime;
     private List<Long> iterTime;
+    private int iterationNumber;
 
     //For ValueIterationSolver
     private List<Integer> vectorNumber;
@@ -43,15 +44,17 @@ public class TestResult {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("TestResult{");
-        sb.append("testName='").append(testName).append('\'');
-        sb.append(", initTime=").append(initTime);
-        sb.append(", iterTime=").append(iterTime);
-        sb.append(", iterationNumber=").append(iterationNumber);
-        sb.append(", vectorNumber=").append(vectorNumber);
-        sb.append(", valueFunction=").append(valueFunction);
-        sb.append(", value=").append(value);
-        sb.append('}');
+        final StringBuffer sb = new StringBuffer("TestResult:["+testName+"]\n");
+        sb.append("---------------------\n");
+        sb.append("Iter Number\t|\t").append(iterationNumber).append("\n");
+
+        sb.append("Init Time\t|\t").append(initTime).append("\n");
+        sb.append("Iter Time\t|\t").append(iterTime).append("\n");
+
+        sb.append("Vect Number\t|\t").append(vectorNumber).append("\n");
+        sb.append("Value Exp\t|\t").append(value).append("\n");
+        sb.append("Value Func:\n").append(valueFunction).append("\n");
+        sb.append("=====================");
         return sb.toString();
     }
 
@@ -83,6 +86,6 @@ public class TestResult {
         return value;
     }
 
-    private double iterationNumber;
+
 
 }

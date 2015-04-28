@@ -2,11 +2,10 @@ package test;
 
 import model.POMDP;
 import model.POMDPImp;
-import solver.PointBasedSolver;
-import solver.PointBasedSolverParam;
-import solver.criteria.MaxIterationsCriteria;
-import solver.criteria.ValueConvergenceCriteria;
-import solver.iteration.ValueIterationTimer;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.ui.RefineryUtilities;
+
+import java.util.ArrayList;
 
 /**
  * Created by LeoDong on 28/04/2015.
@@ -20,22 +19,35 @@ public class Runner {
         Tester tester = new Tester(pomdp);
 
         double epsi=1e-6*(1-pomdp.gamma())/(2*pomdp.gamma());
-        tester.limitMaxIterationNumber(50);
+        tester.limitMaxIterationNumber(1);
         tester.limitValueConvergence(epsi);
+        ArrayList<TestResult> testResults = new ArrayList<TestResult>();
 
-        TestResult r1 = tester.TestExploratoryPBVI();
-        TestResult r2 = tester.TestGreedyPBVI();
-        TestResult r3 = tester.TestIncrementalPruning(epsi);
-        TestResult r4 = tester.TestPerseusPBVI();
-        TestResult r5 = tester.TestQMDP();
+        System.out.println("Test [GreedyPBVI]:");
+        testResults.add(tester.TestGreedyPBVI());
+        System.out.println("Test [ExploratoryPBVI]:");
+        testResults.add(tester.TestExploratoryPBVI());
+        System.out.println("Test [PerseusPBVI]:");
+        testResults.add(tester.TestPerseusPBVI());
+        System.out.println("Test [IncrementalPruning]:");
+        testResults.add(tester.TestIncrementalPruning(epsi));
+        System.out.println("Test [QMDP]:");
+        testResults.add(tester.TestQMDP());
 
-        System.out.println(r1);
-        System.out.println(r2);
-        System.out.println(r3);
-        System.out.println(r4);
-        System.out.println(r5);
+        System.out.println("\nTest Results:\n");
+        for (TestResult r : testResults){
+            System.out.println(r+"\n");
+        }
 
-
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
+        for (TestResult r : testResults){
+            String name = r.getTestName();
+            dataset.addValue(r.getInitTime(),name,"init");
+            for (int i = 0; i< r.getIterTime().size();i++){
+                dataset.addValue(r.getIterTime().get(i),name,"iter"+i);
+            }
+        }
+        LineChart_IterationTimeComparision.createForDataSet(dataset);
 
     }
 }

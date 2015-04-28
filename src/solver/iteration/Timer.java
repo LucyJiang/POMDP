@@ -62,14 +62,4 @@ public class Timer {
         return timeRecords;
     }
 
-    public String toString() {
-        String ret = "Timer:\n";
-        ret += "-----------------\n";
-        ret += "iterNumber = " + iterNumber + "\n";
-        ret += "initTime = " + initTime + "\n";
-        ret += "iteration time  = ";
-        ret += getTotalTime() + "\n";
-        return ret;
-    }
-
 }

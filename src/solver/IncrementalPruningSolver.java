@@ -60,7 +60,6 @@ public class IncrementalPruningSolver extends ValueIterationSolver {
 			current.merge(vfA);
 		}
 		iterationStats.registerLp(current.prune(delta));
-		System.out.println(current.size());
         recordVectorCount();
         this.getTimer().recordIterTime();
 	}

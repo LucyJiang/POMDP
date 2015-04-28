@@ -115,16 +115,23 @@ public class ValueFunctionImp implements ValueFunction {
 	}
 	
     public String toString(){
-    	String ret="Value Function\n";
-    	for (int i=0;i<size();i++){
-    		ret+="v"+i+"\t[";
+        StringBuffer sb = new StringBuffer();
+        int i=0;
+    	for (;i<size()-1;i++){
+    		sb.append("\tv"+i+"\t[");
             Vector v=getAlphaValues(i);
     		for (int j=0;j<v.getDimension();j++){
-    			ret+=v.getEntry(j)+" ";
+                sb.append(v.getEntry(j)+" ");
     		}
-    		ret+="] a="+getAlphaAction(i)+"\n";
+            sb.append("] a="+getAlphaAction(i)+"\n");
     	}
-    	return ret;
+        sb.append("\tv"+i+"\t[");
+        Vector v=getAlphaValues(i);
+        for (int j=0;j<v.getDimension();j++){
+            sb.append(v.getEntry(j)+" ");
+        }
+        sb.append("] a="+getAlphaAction(i));
+    	return sb.toString();
     }
     
     public long prune(){

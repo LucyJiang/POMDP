@@ -18,7 +18,7 @@ public class ValueConvergenceCriteria extends Criteria {
 		ValueFunction newv=vi.getValueFunction();
 		ValueFunction oldv=vi.getOldValueFunction();
 		if (oldv==null  || newv.size()!=oldv.size()){
-			System.out.println("Eval(" + i.getTimer().getIterNumber() + ") = Inf");
+			System.out.println("eval = Infinity");
 			return false;
 		}
 		((ValueFunctionImp)newv).sort();
@@ -28,7 +28,7 @@ public class ValueConvergenceCriteria extends Criteria {
 			AlphaVector newAlpha=newv.getAlphaVector(j);
 			AlphaVector oldAlpha=oldv.getAlphaVector(j);
 			if (newAlpha.getAction()!=oldAlpha.getAction()){
-				System.out.println("Eval(" + i.getTimer().getIterNumber() + ") = Inf");
+				System.out.println("eval = Infinity");
 				return false;
 			}
 			Vector perf= new Vector(newAlpha.getVectorCopy().mapMultiply(-1.0).add(oldAlpha.getVectorRef()));
@@ -37,7 +37,7 @@ public class ValueConvergenceCriteria extends Criteria {
 			if (a_value > conv)
 				conv=a_value;
 		}
-		System.out.println("Eval(" + i.getTimer().getIterNumber() + ") = " + conv);
+		System.out.println("eval = " + conv);
 		if (conv <= epsilon && i.getTimer().getIterNumber() > MIN_ITERATIONS)
 			return(true);
 		return false;

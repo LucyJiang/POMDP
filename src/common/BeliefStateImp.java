@@ -49,13 +49,13 @@ public class BeliefStateImp implements BeliefState {
     }
 
 
-    public static BeliefState generateRandom(int size) {
+    public static BeliefStateImp generateRandom(int size) {
         Vector v = new Vector(size);
         for (int i = 0; i < size; i++) {
             v.setEntry(i, Utils.random.nextDouble());
         }
         v.scale(v.getL1Norm());
-        return (new BeliefStateImp(v));
+        return new BeliefStateImp(v);
     }
 
 

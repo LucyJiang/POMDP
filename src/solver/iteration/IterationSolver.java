@@ -12,11 +12,14 @@ public abstract class IterationSolver implements Solver {
 
     @Override
     public void run() {
+        System.out.print(
+                "*START:");
         while (!checkStop()) {
-            System.out.println(
-                    "== Iteration " + timer.getIterNumber() + " ==");
+            System.out.print(
+                    "*Iter[" + timer.getIterNumber() + "]:");
             iterate();
         }
+        System.out.print("\n");
     }
 
     @Override

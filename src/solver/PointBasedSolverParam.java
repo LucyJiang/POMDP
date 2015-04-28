@@ -1,6 +1,6 @@
 package solver;
 
-public class PbParams {
+public class PointBasedSolverParam {
 	protected int backupMethod;
 	protected int expandMethod;
 	protected int backupHorizon;
@@ -15,12 +15,12 @@ public class PbParams {
 	
 	public static final int EXPAND_GREEDY_ERROR_REDUCTION = 1;
 	public static final int EXPAND_EXPLORATORY_ACTION = 2;
-	public static final int EXPAND_RANDOM_EXPLORE_STATIC = 3;
-	public static final int EXPAND_RANDOM_EXPLORE_DYNAMIC = 4;
+	public static final int EXPAND_RANDOM_EXPLORE = 3;
 	
-	public PbParams(int backupMethod, int expandMethod,
-			int backupHorizon, int maxTotalPoints, int maxNewPoints,
-			boolean newPointsOnly) {
+	public PointBasedSolverParam(
+            int backupMethod, int expandMethod,
+            int backupHorizon, int maxTotalPoints, int maxNewPoints,
+            boolean newPointsOnly) {
 		super();
 		this.backupMethod = backupMethod;
 		this.expandMethod = expandMethod;
@@ -30,18 +30,23 @@ public class PbParams {
 		this.newPointsOnly = newPointsOnly;
 	}
 
-	public PbParams(int backupMethod, int expandMethod,int backupHorizon){
+	public PointBasedSolverParam(
+            int backupMethod,
+            int expandMethod,
+            int backupHorizon){
 		this(backupMethod, expandMethod, backupHorizon,Integer.MAX_VALUE);
 	}
 	
 	
-	public PbParams(int backupMethod, int expandMethod,
-			int backupHorizon, int maxTotalPoints) {
+	public PointBasedSolverParam(
+            int backupMethod, int expandMethod,
+            int backupHorizon, int maxTotalPoints) {
 		this(backupMethod, expandMethod, backupHorizon, maxTotalPoints, Integer.MAX_VALUE , false);
 	}
 	
-	public PbParams(int backupMethod, int expandMethod,
-			int backupHorizon, int maxTotalPoints, int maxNewPoints) {
+	public PointBasedSolverParam(
+            int backupMethod, int expandMethod,
+            int backupHorizon, int maxTotalPoints, int maxNewPoints) {
 		this(backupMethod, expandMethod, backupHorizon, maxTotalPoints, maxNewPoints, false);
 	}
 	

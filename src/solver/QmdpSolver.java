@@ -18,27 +18,26 @@ import common.AlphaVector;
 import model.POMDP;
 import common.ValueFunctionImp;
 import model.Vector;
-import solver.iteration.Timer;
-import solver.iteration.ValueIterationStd;
+import solver.iteration.ValueIterationSolver;
 
-public class QmdpStd extends ValueIterationStd {
+public class QmdpSolver extends ValueIterationSolver {
     
 	public AlphaVector Vt;
 	
-	public QmdpStd(POMDP pomdp){
-		startTimer();
-		initValueIteration(pomdp);
+	public QmdpSolver(POMDP pomdp){
+        this.getTimer().start();
+        this.pomdp = pomdp;
 		current=new ValueFunctionImp(pomdp.numS());
 		for(int a=0; a<pomdp.numA(); a++)
 		    current.push(new AlphaVector(pomdp.numS(),a));
 		Vt=new AlphaVector(pomdp.numS());
-		writeInitTime();
+        this.getTimer().recordInitTime();
 	}
 
 
-	@Override
-	public Timer iterate() {
-		startTimer();
+    @Override
+	public void iterate() {
+        this.getTimer().start();
 		old=current.copy();
 		current=new ValueFunctionImp(pomdp.numS());
 		for(int a=0; a<pomdp.numA(); a++){
@@ -58,7 +57,7 @@ public class QmdpStd extends ValueIterationStd {
 			}
 			Vt.setValue(s, colmax);
 		}
-		registerValueIterationStats();
-    	return timer;
+        recordVectorCount();
+        this.getTimer().recordIterTime();
 	}
 } // qmdpFlat

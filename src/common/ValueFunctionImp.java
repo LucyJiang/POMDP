@@ -10,7 +10,6 @@
 package common;
 
 // imports
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -76,7 +75,6 @@ public class ValueFunctionImp implements ValueFunction {
     			sel=alpha;
     		}
     	}
-		bel.setAlphaVectorIndex(set.indexOf(sel));
 		return valmax;
     }
 
@@ -143,7 +141,7 @@ public class ValueFunctionImp implements ValueFunction {
 			return total_lp_time;
 		ArrayList<AlphaVector> newv=new ArrayList<AlphaVector>();
 		while(set.size()>0){
-			BeliefStateImp b;
+			BeliefState b;
 			AlphaVector sel_vect=set.remove(0);
 			if (newv.size()==0){
 				b = new BeliefStateImp(new Vector(sel_vect.size(),1d/sel_vect.size()),-1);
@@ -164,11 +162,11 @@ public class ValueFunctionImp implements ValueFunction {
 	}
 
 	public AlphaVector getBestAlpha(BeliefState b) {
-		return(getBestAlpha((BeliefStateImp) b,this.set,0.0));
+		return(getBestAlpha(b,this.set,0.0));
 	}
 	
 	private AlphaVector getBestAlpha(
-            BeliefStateImp b,
+            BeliefState b,
 			ArrayList<AlphaVector> set2,double delta) {
 		AlphaVector best_vec = set2.get(0);
 		double best_val=best_vec.eval(b);
@@ -193,9 +191,9 @@ public class ValueFunctionImp implements ValueFunction {
 			return(testVec);
 	}
 
-	private BeliefStateImp find_region(AlphaVector selVect, ArrayList<AlphaVector> newv, double delta){
+	private BeliefState find_region(AlphaVector selVect, ArrayList<AlphaVector> newv, double delta){
 		// Can Sparsity play a role here?, nice question!
-		BeliefStateImp bel=null;
+		BeliefState bel=null;
 		glp_prob lp;
 		glp_smcp parm;
 		SWIGTYPE_p_int ind;

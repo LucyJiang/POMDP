@@ -75,7 +75,7 @@ public interface POMDP {
 
     public int getRandomAction();
 
-    public int getRandomObservation(BeliefStateImp bel, int a);
+    public int getRandomObservation(BeliefState bel, int a);
 
     public double getRewardMax();
 

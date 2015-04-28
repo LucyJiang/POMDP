@@ -4,18 +4,17 @@ import common.AlphaVector;
 import common.ValueFunction;
 import common.ValueFunctionImp;
 import model.Vector;
-import solver.iteration.Iteration;
-import solver.iteration.ValueIteration;
+import solver.iteration.IterationSolver;
+import solver.iteration.ValueIterationSolver;
 
 public class ValueConvergenceCriteria extends Criteria {
 
-	double epsilon;
-	int convCriteria;
+    double epsilon;
 	
 	static final int MIN_ITERATIONS = 5;
 	
-	public boolean check(Iteration i) {
-		ValueIteration vi=(ValueIteration)i;
+	public boolean check(IterationSolver i) {
+		ValueIterationSolver vi=(ValueIterationSolver)i;
 		ValueFunction newv=vi.getValueFunction();
 		ValueFunction oldv=vi.getOldValueFunction();
 		if (oldv==null  || newv.size()!=oldv.size()){
@@ -33,15 +32,8 @@ public class ValueConvergenceCriteria extends Criteria {
 				return false;
 			}
 			Vector perf= new Vector(newAlpha.getVectorCopy().mapMultiply(-1.0).add(oldAlpha.getVectorRef()));
-			double a_value=0;
-			switch(convCriteria){
-			case CC_MAXEUCLID:
-				a_value = perf.getNorm();
-				break;
-			case CC_MAXDIST:
-				a_value = perf.getNorm();
-				break;
-			}
+			double a_value= perf.getL1Norm();
+
 			if (a_value > conv)
 				conv=a_value;
 		}
@@ -52,16 +44,15 @@ public class ValueConvergenceCriteria extends Criteria {
  	}
 
 	@Override
-	public boolean valid(Iteration vi) {
-		if (vi instanceof ValueIteration){
+	public boolean valid(IterationSolver vi) {
+		if (vi instanceof ValueIterationSolver){
 			return true;
 		}
 		return false;
 	}
 
-	public ValueConvergenceCriteria(double epsilon,int convCriteria) {
+	public ValueConvergenceCriteria(double epsilon) {
 		this.epsilon=epsilon;
-		this.convCriteria=convCriteria;
 	}
 	
 

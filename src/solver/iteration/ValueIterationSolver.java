@@ -3,17 +3,11 @@ package solver.iteration;
 import model.POMDP;
 import common.ValueFunctionImp;
 
-public abstract class ValueIterationStd extends ValueIteration {
+public abstract class ValueIterationSolver extends IterationSolver {
 
     protected POMDP pomdp;
     protected ValueFunctionImp current;
     protected ValueFunctionImp old;
-
-    protected void initValueIteration(POMDP pomdp) {
-        this.pomdp = pomdp;
-        initIteration();
-        timer = new ValueIterationTimer();
-    }
 
     public POMDP getPOMDP() {
         return pomdp;
@@ -27,14 +21,18 @@ public abstract class ValueIterationStd extends ValueIteration {
         return old;
     }
 
-    public abstract Timer iterate();
-
-    public void registerValueIterationStats() {
+    public void recordVectorCount(){
         if (current != null) {
-            ((ValueIterationTimer) timer).iteration_vector_count
-                    .add(new Integer(current.size()));
+            ValueIterationTimer vit = (ValueIterationTimer) getTimer();
+            vit.recordVectorCount(current.size());
         }
-        writeIterTime();
     }
 
+    @Override
+    public Timer getTimer() {
+        if(this.timer==null){
+            this.timer= new ValueIterationTimer();
+        }
+        return this.timer;
+    }
 }

@@ -2,52 +2,74 @@ package solver.iteration;
 
 import java.util.ArrayList;
 
-public abstract class Timer {
+public class Timer {
 
-    private long initTime;
-    private ArrayList<Long> timeRecords;
-    private int iterNumber;
+    protected long initTime;
+    protected ArrayList<Long> timeRecords;
+    protected int iterNumber;
 
-    private long start_time = -1;
+    protected long start_time = -1;
 
-    public void writeTimeRecords(long tr) {
-        iterNumber++;
-		timeRecords.add(new Long(tr));
-	}
+    public void start() {
+        this.start_time = System.currentTimeMillis();
+    }
 
-	public Timer() {
-		timeRecords =new ArrayList<Long>();
-		iterNumber =0;
-	}
+    public void stop(){
+        this.start_time = -1;
+    }
 
-    public long getTotalTime(){
-        long totalTime=0;
-        for (Long l: timeRecords){
-            totalTime+=l;
+    public long getInitTime() {
+        return initTime;
+    }
+
+    public long recordInitTime(){
+        if(this.start_time==-1){
+            throw new RuntimeException("timer hasn't start");
+        }
+        this.initTime = System.currentTimeMillis() - this.start_time;
+        return this.initTime;
+    }
+
+    public long recordIterTime(){
+        if(this.start_time==-1){
+            throw new RuntimeException("timer hasn't start");
+        }
+        long t = System.currentTimeMillis() - this.start_time;
+        this.iterNumber++;
+        timeRecords.add(t);
+        return t;
+    }
+
+
+    public Timer() {
+        timeRecords = new ArrayList<Long>();
+        iterNumber = 0;
+    }
+
+    public long getTotalTime() {
+        long totalTime = 0;
+        for (Long l : timeRecords) {
+            totalTime += l;
         }
         return totalTime;
     }
 
-    public void writeInitTime(long time){
-        this.initTime = time;
-    }
-
-    public int getIterNumber(){
+    public int getIterNumber() {
         return iterNumber;
     }
 
-    public ArrayList<Long> getTimeRecords(){
+    public ArrayList<Long> getTimeRecords() {
         return timeRecords;
     }
-	
-	public String toString(){
-		String ret="Timer:\n";
-		ret+=      "-----------------\n";
-		ret+=      "iterNumber = " + iterNumber + "\n";
-		ret+=      "initTime = " + initTime + "\n" ;
-		ret+=      "iteration time  = ";
-		ret+= getTotalTime()+"\n";
-		return ret;
-	}
+
+    public String toString() {
+        String ret = "Timer:\n";
+        ret += "-----------------\n";
+        ret += "iterNumber = " + iterNumber + "\n";
+        ret += "initTime = " + initTime + "\n";
+        ret += "iteration time  = ";
+        ret += getTotalTime() + "\n";
+        return ret;
+    }
 
 }

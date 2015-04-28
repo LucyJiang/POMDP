@@ -20,34 +20,6 @@ public interface BeliefState {
 	@return belief-point */
     public Vector getPoint();
 
-    // TODO: It is not better to have here the reference of the alpha vector rather
-    // than the index??
-
-    /// returns the entropy of the belief in nats
-    public double getEntropy(); 
-
-
-    /** Get the reachability probability. Pr(o|b,a).
-	@return the reachability probability. */
-    public double getPoba();
-
-    /** Set the reachability probability. Pr(o|b,a).
-	@param poba the reachability probability */ 
-    public void setPoba(double poba);
-
-
-    // TODO: It is not better to have here the reference of the alpha vector rather
-    // than the index??
-
-    /** Get index of the alpha vector that supports this point.
-	@return the index of the alpha vector that supports this point */
-    	public int getAlphaVectorIndex();
-
-    /** Set index of the alpha vector that supports this point. 
-	@param planid the index of the alpha vector that supports this point */
-    public void setAlphaVectorIndex(int planid);
-
-	
     /** Compare with other belief-state.
 	@param bel a belief-state. 
 	@return true if equals, false else */

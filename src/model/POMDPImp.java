@@ -101,7 +101,7 @@ public class POMDPImp implements POMDP {
 
     /// R(b,a)
     public double expectedImmediateReward(BeliefState bel, int a) {
-        Vector b = ((BeliefStateImp) bel).belief;
+        Vector b = bel.getPoint();
         return b.dotProduct(RforA(a));
     }
 
@@ -177,7 +177,7 @@ public class POMDPImp implements POMDP {
     }
 
     /// ???
-    public int getRandomObservation(BeliefStateImp bel, int a) {
+    public int getRandomObservation(BeliefState bel, int a) {
         double roulette = Utils.random.nextDouble();
         Vector vect = new Vector(ZforA(a).transpose().operate(bel.getPoint()));
         double sum = 0.0;
@@ -247,20 +247,24 @@ public class POMDPImp implements POMDP {
 
     //done,need reform
     public String toString() {
-        String rep = "Dimensions:\n";
-
-        rep += "|S|: " + numS() + ", ";
-        rep += "|A|: " + numA() + ", ";
-        rep += "|Z|: " + numO() + "\n";
-        rep += "Transition table: \n";
-        for (int a=0; a< numA(); a++) rep += "T:"+actionName(a)+"\n" + T.get(a).toString()+"\n";
-        rep += "Oservation table: \n";
-        for (int a=0; a< numA(); a++) rep += "Z:"+actionName(a)+"\n" + Z.get(a).toString()+"\n";
-        rep += "Rewards table: \n";
-        for (int a=0; a< numA(); a++) rep += "R:"+actionName(a)+"\n" + R.get(a).toString()+"\n";
-        rep += "Initial Belief: \n";
-        rep += initBelief.getPoint().toString();
-        return rep;
+        StringBuffer sb = new StringBuffer();
+        sb.append("POMDP:\n");
+        sb.append("---------------------\n");
+        sb.append("S: "+S+"\n");
+        sb.append("A: "+A+"\n");
+        sb.append("O: "+O+"\n");
+        for (int a=0; a< numA(); a++){
+            sb.append("T["+actionName(a)+"]:\n "+TforA(a)+"\n");
+        }
+        for (int a=0; a< numA(); a++){
+            sb.append("Z["+actionName(a)+"]:\n "+ZforA(a)+"\n");
+        }
+        for (int a=0; a< numA(); a++){
+            sb.append("R["+actionName(a)+"]:\n "+RforA(a)+"\n");
+        }
+        sb.append("Initial Belief: "+initBelief.getPoint()+"\n");
+        sb.append("======================\n");
+        return sb.toString();
     }
 
     public static class Factory{
@@ -291,13 +295,6 @@ public class POMDPImp implements POMDP {
                     for(int j=1;j<setList.length;j++){
                         if(setList[j].startsWith("discount:")){
                             model.gamma = Double.parseDouble(setList[j].split(" ")[1]);
-                        }else if(setList[j].startsWith("values:")){
-                            String value = setList[j].split(" ")[1];
-                            if (value.equals("reward")){
-//                                model.sign = 1;
-                            }else{
-//                                model.sign = -1;
-                            }
                         }else if(setList[j].startsWith("states:")){
                             String[] stateList = setList[j].split(" ");
                             for(int k=1;k<stateList.length;k++){

@@ -7,28 +7,27 @@ import model.BMDPImp;
 import model.BMDP;
 import model.POMDP;
 import common.ValueFunctionImp;
-import solver.iteration.Timer;
-import solver.iteration.ValueIterationStd;
+import solver.iteration.ValueIterationSolver;
 import solver.iteration.ValueIterationTimer;
 
 
-public class IncrementalPruningStd extends ValueIterationStd {
+public class IncrementalPruningSolver extends ValueIterationSolver {
 
 	BMDP bmdp;
 	private double delta;
 
-	public IncrementalPruningStd(POMDP pomdp, double delta){
-		startTimer();
-		initValueIteration(pomdp);
+	public IncrementalPruningSolver(POMDP pomdp, double delta){
+		this.getTimer().start();
+        this.pomdp = pomdp;
 		this.delta=delta;
 		bmdp=new BMDPImp(pomdp);
 		current = new ValueFunctionImp(pomdp.numS());
 		current.push(new AlphaVector(bmdp.numS()));
-		writeInitTime();
+        this.getTimer().recordInitTime();
 	}
 
-	public Timer iterate() {
-		startTimer();
+	public void iterate() {
+		this.getTimer().start();
 		old=current;
 		ValueIterationTimer
                 iterationStats=(ValueIterationTimer) this.timer;
@@ -62,8 +61,8 @@ public class IncrementalPruningStd extends ValueIterationStd {
 		}
 		iterationStats.registerLp(current.prune(delta));
 		System.out.println(current.size());
-		registerValueIterationStats();
-    	return iterationStats;
+        recordVectorCount();
+        this.getTimer().recordIterTime();
 	}
 
 }

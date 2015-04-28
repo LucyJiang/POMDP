@@ -123,7 +123,7 @@ public class BMDPImp implements BMDP {
         return (pomdp.getRewardMaxMin());
     }
 
-    public int getRandomObservation(BeliefStateImp bel, int a) {
+    public int getRandomObservation(BeliefState bel, int a) {
         return pomdp.getRandomObservation(bel, a);
     }
 

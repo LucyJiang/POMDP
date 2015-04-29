@@ -1,6 +1,5 @@
 package model;
 
-import common.Utils;
 import org.apache.commons.math3.exception.NullArgumentException;
 import org.apache.commons.math3.exception.NumberIsTooLargeException;
 import org.apache.commons.math3.linear.ArrayRealVector;
@@ -9,7 +8,7 @@ import org.apache.commons.math3.linear.RealVector;
 /**
  * Created by LeoDong on 26/04/2015.
  */
-public class Vector extends ArrayRealVector implements Comparable<Vector>{
+public class Vector extends ArrayRealVector implements Comparable<Vector> {
     public Vector() {
         super();
     }
@@ -85,15 +84,14 @@ public class Vector extends ArrayRealVector implements Comparable<Vector>{
     }
 
 
-
     public void scale(double d) {
         for (int i = 0; i < this.getDimension(); i++) {
-            this.setEntry(i,this.getEntry(i)*d);
+            this.setEntry(i, this.getEntry(i) * d);
         }
     }
 
-    public int compareTo(Vector vprime,double delta) {
-        for (int i=0;i<this.getDimension();i++){
+    public int compareTo(Vector vprime, double delta) {
+        for (int i = 0; i < this.getDimension(); i++) {
             if (this.getEntry(i) > vprime.getEntry(i) + delta)
                 return 1;
             if (this.getEntry(i) < vprime.getEntry(i) - delta)
@@ -108,6 +106,6 @@ public class Vector extends ArrayRealVector implements Comparable<Vector>{
     }
 
     public int compareTo(Vector arg0) {
-        return compareTo(arg0,0.0);
+        return compareTo(arg0, 0.0);
     }
 }

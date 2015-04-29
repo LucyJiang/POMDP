@@ -15,38 +15,104 @@ import java.util.List;
 public class TestResult {
     private String testName;
     private long initTime;
-    private List<Long> iterTime;
+    private ArrayList<Long> iterTime;
     private int iterationNumber;
+    private double totalTime;
 
     //For ValueIterationSolver
-    private List<Integer> vectorNumber;
+    private ArrayList<Integer> vectorNumber;
     private ValueFunction valueFunction;
     private double value;
 
-    public TestResult(String name,POMDP model, Solver solver){
+    private TestResult() {
+        this.testName = "";
+        this.initTime = 0l;
+        this.iterTime = null;
+        this.iterationNumber = 0;
+        this.totalTime = 0l;
+
+        this.vectorNumber = null;
+        this.valueFunction = null;
+        this.value = 0;
+    }
+
+    public TestResult(String name, POMDP model, Solver solver) {
         this.testName = name;
         this.initTime = solver.getTimer().getInitTime();
         this.iterTime = solver.getTimer().getTimeRecords();
+        this.totalTime = solver.getTimer().getTotalTime();
 
         this.iterationNumber = solver.getTimer().getIterNumber();
-        if(solver instanceof ValueIterationSolver){
-            ValueIterationSolver solverP = (ValueIterationSolver)solver;
-            this.vectorNumber = ((ValueIterationTimer)solverP.getTimer()).getVectorCounter();
+        if (solver instanceof ValueIterationSolver) {
+            ValueIterationSolver solverP = (ValueIterationSolver) solver;
+            this.vectorNumber = ((ValueIterationTimer) solverP.getTimer())
+                    .getVectorCounter();
             this.valueFunction = solverP.getValueFunction();
             this.value = this.valueFunction.V(model.getInitBeliefState());
-        }else{
+        } else {
             this.vectorNumber = null;
             this.valueFunction = null;
             this.value = Double.NaN;
         }
+    }
 
+
+    public static TestResult average(String name, List<TestResult> list) {
+        int size = list.size();
+        TestResult res = new TestResult();
+
+        for (TestResult r : list) {
+            res.initTime += r.initTime;
+            res.iterationNumber += r.iterationNumber;
+            res.totalTime += r.totalTime;
+
+            if (res.iterTime == null) {
+                res.iterTime = (ArrayList<Long>) r.iterTime.clone();
+            } else {
+                for (int i = 0; i < res.iterTime.size(); i++) {
+                    res.iterTime
+                            .set(i, res.iterTime.get(i) + r.iterTime.get(i));
+                }
+            }
+
+            if (res.vectorNumber == null) {
+                res.vectorNumber = (ArrayList<Integer>) r.vectorNumber.clone();
+            } else {
+                for (int i = 0; i < res.vectorNumber.size(); i++) {
+                    res.vectorNumber.set(i,
+                                         res.vectorNumber.get(i) +
+                                         r.vectorNumber.get(i));
+                }
+            }
+            res.value += r.value;
+        }
+
+
+        res.testName = name;
+        res.initTime = res.initTime / size;
+
+        res.iterationNumber = res.iterationNumber / size;
+        res.totalTime = res.totalTime / size;
+
+        for (int i = 0; i < res.iterTime.size(); i++) {
+            res.iterTime.set(i, res.iterTime.get(i) / size);
+        }
+        for (int i = 0; i < res.vectorNumber.size(); i++) {
+            res.vectorNumber.set(i, res.vectorNumber.get(i) / size);
+        }
+
+        res.valueFunction = null;
+        res.value = res.value / size;
+        return res;
     }
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("TestResult:["+testName+"]\n");
+        final StringBuffer sb = new StringBuffer(
+                "TestResult:[" + testName + "]\n");
         sb.append("---------------------\n");
         sb.append("Iter Number\t|\t").append(iterationNumber).append("\n");
+        sb.append("Total Time\t|\t").append(totalTime).append("\n");
 
         sb.append("Init Time\t|\t").append(initTime).append("\n");
         sb.append("Iter Time\t|\t").append(iterTime).append("\n");
@@ -86,6 +152,8 @@ public class TestResult {
         return value;
     }
 
-
+    public double getTotalTime() {
+        return totalTime;
+    }
 
 }

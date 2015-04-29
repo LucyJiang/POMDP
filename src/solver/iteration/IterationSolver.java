@@ -2,6 +2,7 @@ package solver.iteration;
 
 import solver.Solver;
 import solver.criteria.Criteria;
+import solver.util.Timer;
 
 import java.util.ArrayList;
 
@@ -37,7 +38,6 @@ public abstract class IterationSolver implements Solver {
     }
 
     protected abstract void iterate();
-
 
 
 }

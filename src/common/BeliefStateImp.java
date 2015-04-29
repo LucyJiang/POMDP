@@ -12,8 +12,7 @@ package common;
 // imports
 
 import model.Vector;
-
-import java.io.Serializable;
+import util.Utils;
 
 public class BeliefStateImp implements BeliefState {
 
@@ -39,16 +38,6 @@ public class BeliefStateImp implements BeliefState {
     // calling this method should be for debugging
     // purposes only, otherwise we loose the sparse rep
 
-    public Vector getPoint() {
-        return belief;
-    }
-
-
-    public BeliefState copy() {
-        return (new BeliefStateImp(belief, poba));
-    }
-
-
     public static BeliefStateImp generateRandom(int size) {
         Vector v = new Vector(size);
         for (int i = 0; i < size; i++) {
@@ -58,6 +47,13 @@ public class BeliefStateImp implements BeliefState {
         return new BeliefStateImp(v);
     }
 
+    public Vector getPoint() {
+        return belief;
+    }
+
+    public BeliefState copy() {
+        return (new BeliefStateImp(belief, poba));
+    }
 
     public boolean compare(BeliefState arg0) {
         return (belief.equals(arg0.getPoint()));

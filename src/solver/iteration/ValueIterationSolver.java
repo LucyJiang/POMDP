@@ -1,7 +1,8 @@
 package solver.iteration;
 
-import model.POMDP;
 import common.ValueFunctionImp;
+import model.POMDP;
+import solver.util.Timer;
 
 public abstract class ValueIterationSolver extends IterationSolver {
 
@@ -21,7 +22,7 @@ public abstract class ValueIterationSolver extends IterationSolver {
         return old;
     }
 
-    public void recordVectorCount(){
+    public void recordVectorCount() {
         if (current != null) {
             ValueIterationTimer vit = (ValueIterationTimer) getTimer();
             vit.recordVectorCount(current.size());
@@ -30,8 +31,8 @@ public abstract class ValueIterationSolver extends IterationSolver {
 
     @Override
     public Timer getTimer() {
-        if(this.timer==null){
-            this.timer= new ValueIterationTimer();
+        if (this.timer == null) {
+            this.timer = new ValueIterationTimer();
         }
         return this.timer;
     }

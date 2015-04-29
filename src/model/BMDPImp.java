@@ -144,7 +144,7 @@ public class BMDPImp implements BMDP {
     public AlphaVector projection(AlphaVector alpha, int a, int o) {
         Vector vect = new Vector(numS());
         vect = new Vector(vect.add(tau[o][a].scalarMultiply(gamma())
-                                          .operate(alpha.getVectorRef())));
+                                            .operate(alpha.getVectorRef())));
         return (new AlphaVector(vect, a));
     }
 

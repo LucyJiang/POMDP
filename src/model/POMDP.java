@@ -9,15 +9,16 @@
 package model;
 
 import common.BeliefState;
-import common.BeliefStateImp;
 import common.ValueFunctionImp;
 import org.apache.commons.math3.linear.RealMatrix;
 
 
-/** Interface to represent pomdp problem specifications
- * @author Diego Maniloff 
+/**
+ * Interface to represent pomdp problem specifications
+ *
+ * @author Diego Maniloff
  * @author Mauricio Araya
-*/
+ */
 
 public interface POMDP {
 
@@ -35,42 +36,63 @@ public interface POMDP {
 
     /// O(s',a,o): s' x o matrix
     public RealMatrix ZforA(int a);
-    
+
     /// R(s,a): 1 x s vector
     public Vector RforA(int a);
 
     /// initial belief state
     public BeliefState getInitBeliefState();
 
-    /** Get the number of states.
-	@return the number of states */
+    /**
+     * Get the number of states.
+     *
+     * @return the number of states
+     */
     public int numS();
 
-    /** Get the number of actions.
-	@return the number of actions */
+    /**
+     * Get the number of actions.
+     *
+     * @return the number of actions
+     */
     public int numA();
 
-    /** Get the number of observations.
-	@return the number of observations */
+    /**
+     * Get the number of observations.
+     *
+     * @return the number of observations
+     */
     public int numO();
 
-    /** Get the Gamma value.
-	@return the gamma value*/
+    /**
+     * Get the Gamma value.
+     *
+     * @return the gamma value
+     */
     public double gamma();
 
-    /** Get the name of an action.
-	@param a the action
- 	@return the name of the action*/
+    /**
+     * Get the name of an action.
+     *
+     * @param a the action
+     * @return the name of the action
+     */
     public String actionName(int a);
 
-    /** Get the name of an observation.
-	@param o the action
- 	@return the name of the action*/
+    /**
+     * Get the name of an observation.
+     *
+     * @param o the action
+     * @return the name of the action
+     */
     public String observationName(int o);
 
-    /** Get the name of a state.
-	@param s the state
- 	@return the name of the state*/
+    /**
+     * Get the name of a state.
+     *
+     * @param s the state
+     * @return the name of the state
+     */
     public String stateName(int s);
 
     public int getRandomAction();

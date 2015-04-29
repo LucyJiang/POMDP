@@ -1,4 +1,4 @@
-package solver.iteration;
+package solver.util;
 
 import java.util.ArrayList;
 
@@ -10,11 +10,16 @@ public class Timer {
 
     protected long start_time = -1;
 
+    public Timer() {
+        timeRecords = new ArrayList<Long>();
+        iterNumber = 0;
+    }
+
     public void start() {
         this.start_time = System.currentTimeMillis();
     }
 
-    public void stop(){
+    public void stop() {
         this.start_time = -1;
     }
 
@@ -22,28 +27,22 @@ public class Timer {
         return initTime;
     }
 
-    public long recordInitTime(){
-        if(this.start_time==-1){
+    public long recordInitTime() {
+        if (this.start_time == -1) {
             throw new RuntimeException("timer hasn't start");
         }
         this.initTime = System.currentTimeMillis() - this.start_time;
         return this.initTime;
     }
 
-    public long recordIterTime(){
-        if(this.start_time==-1){
+    public long recordIterTime() {
+        if (this.start_time == -1) {
             throw new RuntimeException("timer hasn't start");
         }
         long t = System.currentTimeMillis() - this.start_time;
         this.iterNumber++;
         timeRecords.add(t);
         return t;
-    }
-
-
-    public Timer() {
-        timeRecords = new ArrayList<Long>();
-        iterNumber = 0;
     }
 
     public long getTotalTime() {

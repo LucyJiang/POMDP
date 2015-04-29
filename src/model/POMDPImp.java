@@ -26,14 +26,17 @@
 package model;
 
 // imports
-import common.*;
+
+import common.AlphaVector;
+import common.BeliefState;
+import common.BeliefStateImp;
+import common.ValueFunctionImp;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
+import util.Utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,9 +53,9 @@ public class POMDPImp implements POMDP {
     private List<String> O = new ArrayList<String>(); //NO
 
     // transition model: a x s x s'
-    private HashMap<Integer,RealMatrix> T = new HashMap<Integer,RealMatrix>();
+    private HashMap<Integer, RealMatrix> T = new HashMap<Integer, RealMatrix>();
     // observation model: a x s' x o
-    private HashMap<Integer,RealMatrix> Z = new HashMap<Integer,RealMatrix>();
+    private HashMap<Integer, RealMatrix> Z = new HashMap<Integer, RealMatrix>();
     // reward model: a x s'
     private HashMap<Integer, Vector> R = new HashMap<Integer, Vector>();
 
@@ -250,145 +253,145 @@ public class POMDPImp implements POMDP {
         StringBuffer sb = new StringBuffer();
         sb.append("POMDP:\n");
         sb.append("---------------------\n");
-        sb.append("S: "+S+"\n");
-        sb.append("A: "+A+"\n");
-        sb.append("O: "+O+"\n");
-        for (int a=0; a< numA(); a++){
-            sb.append("T["+actionName(a)+"]:\n ");
+        sb.append("S: " + S + "\n");
+        sb.append("A: " + A + "\n");
+        sb.append("O: " + O + "\n");
+        for (int a = 0; a < numA(); a++) {
+            sb.append("T[" + actionName(a) + "]:\n ");
             int s = 0;
-            for (;s< numS()-1;s++){
-                sb.append(TforA(a).getRowVector(s)+"\n ");
+            for (; s < numS() - 1; s++) {
+                sb.append(TforA(a).getRowVector(s) + "\n ");
             }
-            sb.append(TforA(a).getRowVector(s)+"\n");
+            sb.append(TforA(a).getRowVector(s) + "\n");
         }
-        for (int a=0; a< numA(); a++){
-            sb.append("Z["+actionName(a)+"]:\n ");
+        for (int a = 0; a < numA(); a++) {
+            sb.append("Z[" + actionName(a) + "]:\n ");
             int s = 0;
-            for (;s< numS()-1;s++){
-                sb.append(ZforA(a).getRowVector(s)+"\n ");
+            for (; s < numS() - 1; s++) {
+                sb.append(ZforA(a).getRowVector(s) + "\n ");
             }
-            sb.append(ZforA(a).getRowVector(s)+"\n");
+            sb.append(ZforA(a).getRowVector(s) + "\n");
         }
-        for (int a=0; a< numA(); a++){
-            sb.append("R["+actionName(a)+"]:\n "+RforA(a)+"\n");
+        for (int a = 0; a < numA(); a++) {
+            sb.append("R[" + actionName(a) + "]:\n " + RforA(a) + "\n");
         }
-        sb.append("Initial Belief: \n "+initBelief.getPoint()+"\n");
+        sb.append("Initial Belief: \n " + initBelief.getPoint() + "\n");
         sb.append("======================");
         return sb.toString();
     }
 
-    public static class Factory{
-        public static POMDP parse(String filename){
+    public static class Factory {
+        public static POMDP parse(String filename) throws IOException {
             POMDPImp model = new POMDPImp();
             String content = "";
-            try {
-                File file = new File("data/"+filename);
-                if (file.isFile() && file.exists()){
-                    InputStreamReader
-                            read = new InputStreamReader(new FileInputStream(file), "GBK");
-                    BufferedReader br = new BufferedReader(read);
-                    String line;
-                    while((line = br.readLine())!=null){
-                        content =content + line + "\n";
-                    }
-                    read.close();
-                }else{
-                    System.out.println("Cannot find file");
+            File file = new File(filename);
+            if (file.isFile() && file.exists()) {
+                InputStreamReader
+                        read = new InputStreamReader(new FileInputStream(file),
+                                                     "GBK");
+                BufferedReader br = new BufferedReader(read);
+                String line;
+                while ((line = br.readLine()) != null) {
+                    content = content + line + "\n";
                 }
-            }catch (Exception e){}
+                read.close();
+            } else {
+                throw new NoSuchFileException("Cannot find file: " + filename);
+            }
 
 
             String[] list = content.split("\n\n");
-            for(int i=0;i<list.length;i++){
-                if (list[i].startsWith("SETUP:")){
+            for (int i = 0; i < list.length; i++) {
+                if (list[i].startsWith("SETUP:")) {
                     String[] setList = list[i].split("\n");
-                    for(int j=1;j<setList.length;j++){
-                        if(setList[j].startsWith("discount:")){
-                            model.gamma = Double.parseDouble(setList[j].split(" ")[1]);
-                        }else if(setList[j].startsWith("states:")){
+                    for (int j = 1; j < setList.length; j++) {
+                        if (setList[j].startsWith("discount:")) {
+                            model.gamma = Double
+                                    .parseDouble(setList[j].split(" ")[1]);
+                        } else if (setList[j].startsWith("states:")) {
                             String[] stateList = setList[j].split(" ");
-                            for(int k=1;k<stateList.length;k++){
+                            for (int k = 1; k < stateList.length; k++) {
                                 model.S.add(stateList[k]);
                             }
-                        }else if(setList[j].startsWith("actions:")){
+                        } else if (setList[j].startsWith("actions:")) {
                             String[] actionList = setList[j].split(" ");
-                            for(int k=1;k<actionList.length;k++){
+                            for (int k = 1; k < actionList.length; k++) {
                                 model.A.add(actionList[k]);
                             }
-                        }else if(setList[j].startsWith("observations:")){
+                        } else if (setList[j].startsWith("observations:")) {
                             String[] observationList = setList[j].split(" ");
-                            for (int k=1;k<observationList.length;k++){
+                            for (int k = 1; k < observationList.length; k++) {
                                 model.O.add(observationList[k]);
                             }
                         }
                     }
-                }
-                else if(list[i].startsWith("IB:")){
+                } else if (list[i].startsWith("IB:")) {
                     double[] b = new double[model.S.size()];
                     String[] BRows = list[i].split("\n");
                     String[] rowValues = BRows[1].split(" ");
-                    for (int k=0;k<rowValues.length;k++){
+                    for (int k = 0; k < rowValues.length; k++) {
                         b[k] = Double.parseDouble(rowValues[k]);
                     }
-                    model.initBelief = new BeliefStateImp(new Vector(b),0d);
+                    model.initBelief = new BeliefStateImp(new Vector(b), 0d);
 
-                }
-                else if(list[i].startsWith("T:")){
+                } else if (list[i].startsWith("T:")) {
                     String[] TmatrixRows = list[i].split("\n");
                     String action = TmatrixRows[0].split(" ")[1];
                     int stateNum = model.S.size();
                     double[][] t = new double[stateNum][stateNum];
-                    if(TmatrixRows[1].equals("identity")){
-                        for (int j=0;j<stateNum;j++){
+                    if (TmatrixRows[1].equals("identity")) {
+                        for (int j = 0; j < stateNum; j++) {
                             t[j][j] = 1;
                         }
-                        model.T.put(model.A.indexOf(action), MatrixUtils.createRealMatrix(t));
-                    }else{
-                        for(int j=1;j<TmatrixRows.length;j++){
+                        model.T.put(model.A.indexOf(action),
+                                    MatrixUtils.createRealMatrix(t));
+                    } else {
+                        for (int j = 1; j < TmatrixRows.length; j++) {
                             String[] rowValues = TmatrixRows[j].split(" ");
-                            for (int k=0;k<rowValues.length;k++){
-                                t[j-1][k] = Double.parseDouble(rowValues[k]);
+                            for (int k = 0; k < rowValues.length; k++) {
+                                t[j - 1][k] = Double.parseDouble(rowValues[k]);
                             }
                         }
-                        model.T.put(model.A.indexOf(action),MatrixUtils.createRealMatrix(t));
+                        model.T.put(model.A.indexOf(action),
+                                    MatrixUtils.createRealMatrix(t));
                     }
-                }
-                else if(list[i].startsWith("O:")){
+                } else if (list[i].startsWith("O:")) {
                     int stateNum = model.S.size();
                     int observationNum = model.O.size();
                     double[][] o = new double[stateNum][observationNum];
                     String[] OmatrixRows = list[i].split("\n");
                     String action = OmatrixRows[0].split(" ")[1];
-                    if(OmatrixRows[1].equals("uniform")){
-                        for(int j=0;j<stateNum;j++){
-                            for(int k=0;k<observationNum;k++){
-                                o[j][k] = 1.0/observationNum;
+                    if (OmatrixRows[1].equals("uniform")) {
+                        for (int j = 0; j < stateNum; j++) {
+                            for (int k = 0; k < observationNum; k++) {
+                                o[j][k] = 1.0 / observationNum;
                             }
                         }
-                        model.Z.put(model.A.indexOf(action),MatrixUtils.createRealMatrix(o));
-                    }else{
-                        for (int j=1;j<OmatrixRows.length;j++){
+                        model.Z.put(model.A.indexOf(action),
+                                    MatrixUtils.createRealMatrix(o));
+                    } else {
+                        for (int j = 1; j < OmatrixRows.length; j++) {
                             String[] rowValues = OmatrixRows[j].split(" ");
-                            for (int k=0;k<rowValues.length;k++){
-                                o[j-1][k] = Double.parseDouble(rowValues[k]);
+                            for (int k = 0; k < rowValues.length; k++) {
+                                o[j - 1][k] = Double.parseDouble(rowValues[k]);
                             }
                         }
-                        model.Z.put(model.A.indexOf(action),MatrixUtils.createRealMatrix(o));
+                        model.Z.put(model.A.indexOf(action),
+                                    MatrixUtils.createRealMatrix(o));
                     }
-                }
-                else if(list[i].startsWith("R:")){
+                } else if (list[i].startsWith("R:")) {
                     int stateNum = model.S.size();
                     double[] r = new double[stateNum];
                     String[] RRows = list[i].split("\n");
                     String action = RRows[0].split(" ")[1];
                     String[] rowValues = RRows[1].split(" ");
-                    for (int k=0;k<stateNum;k++){
+                    for (int k = 0; k < stateNum; k++) {
                         r[k] = Double.parseDouble(rowValues[k]);
                     }
-                    model.R.put(model.A.indexOf(action),new Vector(r));
+                    model.R.put(model.A.indexOf(action), new Vector(r));
                 }
             }
-            if(model.initBelief==null){
+            if (model.initBelief == null) {
                 model.initBelief = BeliefStateImp.generateRandom(model.numS());
             }
             return model;

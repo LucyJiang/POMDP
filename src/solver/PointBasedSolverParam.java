@@ -1,103 +1,51 @@
 package solver;
 
 public class PointBasedSolverParam {
-	protected int backupMethod;
-	protected int expandMethod;
-	protected int backupHorizon;
-	protected int maxTotalPoints;
-	protected int maxNewPoints;
-	protected boolean newPointsOnly;
-	
-	public static final int BACKUP_SYNC_FULL = 1;
-	public static final int BACKUP_SYNC_NEWPOINTS = 2;
-	public static final int BACKUP_ASYNC_FULL = 3;
-	public static final int BACKUP_ASYNC_NEWPOINTS = 4;
-	
-	public static final int EXPAND_GREEDY_ERROR_REDUCTION = 1;
-	public static final int EXPAND_EXPLORATORY_ACTION = 2;
-	public static final int EXPAND_RANDOM_EXPLORE = 3;
-	
-	public PointBasedSolverParam(
-            int backupMethod, int expandMethod,
-            int backupHorizon, int maxTotalPoints, int maxNewPoints,
-            boolean newPointsOnly) {
-		super();
-		this.backupMethod = backupMethod;
-		this.expandMethod = expandMethod;
-		this.backupHorizon = backupHorizon;
-		this.maxTotalPoints = maxTotalPoints;
-		this.maxNewPoints = maxNewPoints;
-		this.newPointsOnly = newPointsOnly;
-	}
+    public static final int BACKUP_SYNC_FULL = 1;
+    public static final int BACKUP_ASYNC_FULL = 3;
+    public static final int EXPAND_GREEDY_ERROR_REDUCTION = 1;
+    public static final int EXPAND_EXPLORATORY_ACTION = 2;
+    public static final int EXPAND_RANDOM_EXPLORE = 3;
+    private int backupMethod;
+    private int expandMethod;
+    private int backupHorizon;
+    private int maxTotalPoints;
 
-	public PointBasedSolverParam(
-            int backupMethod,
-            int expandMethod,
-            int backupHorizon){
-		this(backupMethod, expandMethod, backupHorizon,Integer.MAX_VALUE);
-	}
-	
-	
-	public PointBasedSolverParam(
+    public PointBasedSolverParam(
             int backupMethod, int expandMethod,
             int backupHorizon, int maxTotalPoints) {
-		this(backupMethod, expandMethod, backupHorizon, maxTotalPoints, Integer.MAX_VALUE , false);
-	}
-	
-	public PointBasedSolverParam(
-            int backupMethod, int expandMethod,
-            int backupHorizon, int maxTotalPoints, int maxNewPoints) {
-		this(backupMethod, expandMethod, backupHorizon, maxTotalPoints, maxNewPoints, false);
-	}
-	
-	public int getBackupMethod() {
-		return backupMethod;
-	}
+        super();
+        this.backupMethod = backupMethod;
+        this.expandMethod = expandMethod;
+        this.backupHorizon = backupHorizon;
+        this.maxTotalPoints = maxTotalPoints;
+    }
 
-	public void setBackupMethod(int backupMethod) {
-		this.backupMethod = backupMethod;
-	}
+    public PointBasedSolverParam(
+            int backupMethod,
+            int expandMethod,
+            int backupHorizon) {
+        this(backupMethod, expandMethod, backupHorizon, Integer.MAX_VALUE);
+    }
 
-	public int getExpandMethod() {
-		return expandMethod;
-	}
 
-	public void setExpandMethod(int expandMethod) {
-		this.expandMethod = expandMethod;
-	}
+    public int getBackupMethod() {
+        return backupMethod;
+    }
 
-	public int getBackupHorizon() {
-		return backupHorizon;
-	}
+    public int getExpandMethod() {
+        return expandMethod;
+    }
 
-	public void setBackupHorizon(int backupHorizon) {
-		this.backupHorizon = backupHorizon;
-	}
 
-	public int getMaxTotalPoints() {
-		return maxTotalPoints;
-	}
+    public int getBackupHorizon() {
+        return backupHorizon;
+    }
 
-	public void setMaxTotalPoints(int maxTotalPoints) {
-		this.maxTotalPoints = maxTotalPoints;
-	}
 
-	public int getMaxNewPoints() {
-		return maxNewPoints;
-	}
+    public int getMaxTotalPoints() {
+        return maxTotalPoints;
+    }
 
-	public void setMaxNewPoints(int maxNewPoints) {
-		this.maxNewPoints = maxNewPoints;
-	}
 
-	public boolean isNewPointsOnly() {
-		return newPointsOnly;
-	}
-
-	public void setNewPointsOnly(boolean newPointsOnly) {
-		this.newPointsOnly = newPointsOnly;
-	}
-
-	
-		
 }

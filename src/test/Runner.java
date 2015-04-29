@@ -1,54 +1,86 @@
 package test;
 
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
 import model.POMDP;
 import model.POMDPImp;
-import org.gnu.glpk.GLPK;
-import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.ui.RefineryUtilities;
+import util.Utils;
+import java.lang.reflect.Field;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by LeoDong on 28/04/2015.
  */
 public class Runner {
-    public static void main(String[] args) throws InterruptedException {
-
-        POMDP pomdp= POMDPImp.Factory.parse("test.POMDP");
-        System.out.println(pomdp);
-
-        Tester tester = new Tester(pomdp);
-
-        double epsi=1e-6*(1-pomdp.gamma())/(2*pomdp.gamma());
-        tester.limitMaxIterationNumber(5);
-        tester.limitValueConvergence(epsi);
-        ArrayList<TestResult> testResults = new ArrayList<TestResult>();
-
-        System.out.println("Test [GreedyPBVI]:");
-        testResults.add(tester.TestGreedyPBVI());
-        System.out.println("Test [ExploratoryPBVI]:");
-        testResults.add(tester.TestExploratoryPBVI());
-        System.out.println("Test [PerseusPBVI]:");
-        testResults.add(tester.TestPerseusPBVI());
-        System.out.println("Test [IncrementalPruning]:");
-        testResults.add(tester.TestIncrementalPruning(epsi));
-        System.out.println("Test [QMDP]:");
-        testResults.add(tester.TestQMDP());
-
-        System.out.println("\nTest Results:\n");
-        for (TestResult r : testResults){
-            System.out.println(r+"\n");
+    public static void main(String[] args) {
+        System.setProperty("java.library.path","/usr/local/lib/jni");
+        try {
+            Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
+            fieldSysPath.setAccessible( true );
+            fieldSysPath.set( null, null );
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
 
-//        DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
-//        for (TestResult r : testResults){
-//            String name = r.getTestName();
-//            dataset.addValue(r.getInitTime(),name,"init");
-//            for (int i = 0; i< r.getIterTime().size();i++){
-//                dataset.addValue(r.getIterTime().get(i),name,"iter"+i);
-//            }
-//        }
-//        LineChart_IterationTimeComparision.createForDataSet(dataset);
+        Command jct = new Command();
+        JCommander jc = new JCommander(jct);
+        try {
+            jc.parse(args);
+
+        } catch (ParameterException e) {
+            System.out.println("Error: " + e.getMessage());
+            jc.usage();
+            return;
+        }
+
+        System.out.println(jct);
+        try {
+            POMDP pomdp = POMDPImp.Factory.parse(jct.modelFile);
+            List<TestResult> tr = Tester
+                    .FullTestSet(pomdp, jct.loopTime, jct.iterTime);
+            Utils.writeTestToFile(pomdp, tr, jct.resultFile, "TEST Result");
+            Utils.generateChart(tr, "demo");
+        } catch (IOException ioe) {
+            System.err.println(ioe.getMessage());
+        }
+    }
+
+    public static class Command {
+
+        @Parameter(names = {"-m",
+                            "--model-file"}, description = "POMDP File path and name")
+        public String modelFile = "test.POMDP";
+
+        @Parameter(names = {"-i",
+                            "--iteration-number"}, description = "Number of iteration", validateWith = PositiveInteger.class)
+        public Integer iterTime = 10;
+
+        @Parameter(names = {"-l",
+                            "--loop-number"}, description = "Number of Loop", validateWith = PositiveInteger.class)
+        public Integer loopTime = 1;
+
+        @Parameter(names = {"-r",
+                            "--result-file"}, description = "Test result file path and name")
+        public String resultFile = "test_result";
+
+        @Override
+        public String toString() {
+            final StringBuffer sb = new StringBuffer(
+                    "Command{");
+            sb.append("modelFile='").append(modelFile).append('\'');
+            sb.append(", iterTime=").append(iterTime);
+            sb.append(", loopTime=").append(loopTime);
+            sb.append(", resultFile='").append(resultFile).append('\'');
+            sb.append('}');
+            return sb.toString();
+        }
 
     }
+
+
 }

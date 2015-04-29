@@ -153,17 +153,18 @@ public class POMDPImp implements POMDP {
         return (Utils.random.nextInt(numA()));
     }
 
-    /// ???
+
     public int getRandomObservation(BeliefState bel, int a) {
         double roulette = Utils.random.nextDouble();
         Vector vect = new Vector(ZforA(a).transpose().operate(bel.getPoint()));
         double sum = 0.0;
-        for (int o = 0; o < numO(); o++) {
+        int o = 0;
+        for (; o < numO(); o++) {
             sum += vect.getEntry(o);
             if (roulette < sum)
                 return o;
         }
-        return (-1);
+        return o-1;
     }
 
 

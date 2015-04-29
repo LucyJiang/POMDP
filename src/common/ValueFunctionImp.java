@@ -1,15 +1,6 @@
-/** ------------------------------------------------------------------------- *
- * libpomdp
- * ========
- * File: valueFunctionSparseMTJ.java
- * Description: 
- * Copyright (c) 2009, 2010 Diego Maniloff 
- * W3: http://www.cs.uic.edu/~dmanilof
- --------------------------------------------------------------------------- */
 
 package common;
 
-// imports
 
 import model.Vector;
 import org.gnu.glpk.*;
@@ -23,9 +14,6 @@ public class ValueFunctionImp implements ValueFunction {
     // ------------------------------------------------------------------------
     // properties
     // ------------------------------------------------------------------------
-
-    // serial id
-
 
     // represent a value function via a Matrix object
     private ArrayList<AlphaVector> set;

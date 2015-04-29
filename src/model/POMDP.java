@@ -1,10 +1,3 @@
-/** ------------------------------------------------------------------------- *
- * libpomdp
- * ========
- * File: Pomdp.java
- * Description: interface to represent Pomdp problem specifications
- * Copyright (c) 2009, 2010 Diego Maniloff 
- --------------------------------------------------------------------------- */
 
 package model;
 
@@ -12,13 +5,6 @@ import common.BeliefState;
 import common.ValueFunctionImp;
 import org.apache.commons.math3.linear.RealMatrix;
 
-
-/**
- * Interface to represent pomdp problem specifications
- *
- * @author Diego Maniloff
- * @author Mauricio Araya
- */
 
 public interface POMDP {
 

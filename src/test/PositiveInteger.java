@@ -3,9 +3,6 @@ package test;
 import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.ParameterException;
 
-/**
- * Created by LeoDong on 29/04/2015.
- */
 public class PositiveInteger implements IParameterValidator {
     public void validate(String name, String value)
             throws ParameterException {

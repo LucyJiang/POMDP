@@ -6,14 +6,12 @@ import com.beust.jcommander.ParameterException;
 import model.POMDP;
 import model.POMDPImp;
 import util.Utils;
-import java.lang.reflect.Field;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.List;
 
-/**
- * Created by LeoDong on 28/04/2015.
- */
+
 public class Runner {
     public static void main(String[] args) {
         System.setProperty("java.library.path","/usr/local/lib/jni");

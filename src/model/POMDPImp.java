@@ -1,31 +1,5 @@
-/** ------------------------------------------------------------------------- *
- * libpomdp
- * ========
- * File:
- * Description: Represent a POMDP model using a flat representation and
- *              sparse matrices and vectors. This class can be constructed
- *              from a pomdpSpecSparseMTJ object after parsing a .pomdp file.
- *              Sparse matrices by matrix-toolkits-java,
- *              every matrix will be CustomMatrix:
- *
- * S =
- *  (3,1)        1
- *  (2,2)        2
- *  (3,2)        3
- *  (4,3)        4
- *  (1,4)        5
- * A =
- *   0     0     0     5
- *   0     2     0     0
- *   1     3     0     0
- *   0     0     4     0
- * Copyright (c) 2009, 2010, 2011 Diego Maniloff
- * Copyright (c) 2010, 2011 Mauricio Araya
- --------------------------------------------------------------------------- */
 
 package model;
-
-// imports
 
 import common.AlphaVector;
 import common.BeliefState;

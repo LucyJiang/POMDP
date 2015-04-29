@@ -1,15 +1,5 @@
-/** ------------------------------------------------------------------------- *
- * libpomdp
- * ========
- * File: belStateSparseMTJ.java
- * Description: 
- * Copyright (c) 2009, 2010 Diego Maniloff 
- * Copyright (c) 2010 Mauricio Araya  
- --------------------------------------------------------------------------- */
 
 package common;
-
-// imports
 
 import model.Vector;
 import util.Utils;

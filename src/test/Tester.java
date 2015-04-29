@@ -13,9 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Created by LeoDong on 27/04/2015.
- */
 public class Tester {
 
     private ArrayList<Criteria> criterias;

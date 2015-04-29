@@ -9,9 +9,6 @@ import solver.iteration.ValueIterationTimer;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by LeoDong on 27/04/2015.
- */
 public class TestResult {
     private String testName;
     private long initTime;

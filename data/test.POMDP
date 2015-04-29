@@ -1,0 +1,31 @@
+SETUP:
+discount: 0.8
+values: reward
+states: left right
+actions: ma mb
+observations: onl onr
+
+IB:
+0.5 0.5
+
+T: ma
+0.3 0.7
+0.5 0.5
+
+T: mb
+0.2 0.8
+0.4 0.6
+
+O: ma
+0.2 0.8
+0 1.0
+
+O: mb
+0 1.0
+0.6 0.4
+
+R: ma
+10 -3
+
+R: mb
+-9 6

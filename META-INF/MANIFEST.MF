@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: .:jcommander-1.48.jar
+Main-Class: test.Runner
+

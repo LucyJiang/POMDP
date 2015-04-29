@@ -1,0 +1,84 @@
+package test;
+
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
+import model.POMDP;
+import model.POMDPImp;
+import util.Utils;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.List;
+
+
+public class Runner {
+    public static void main(String[] args) {
+        System.setProperty("java.library.path","/usr/local/lib/jni");
+        try {
+            Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
+            fieldSysPath.setAccessible( true );
+            fieldSysPath.set( null, null );
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        Command jct = new Command();
+        JCommander jc = new JCommander(jct);
+        try {
+            jc.parse(args);
+
+        } catch (ParameterException e) {
+            System.out.println("Error: " + e.getMessage());
+            jc.usage();
+            return;
+        }
+
+        System.out.println(jct);
+        try {
+            POMDP pomdp = POMDPImp.Factory.parse(jct.modelFile);
+            List<TestResult> tr = Tester
+                    .FullTestSet(pomdp, jct.loopTime, jct.iterTime);
+            Utils.writeTestToFile(pomdp, tr, jct.resultFile, "TEST Result");
+            Utils.generateChart(tr, "demo");
+        } catch (IOException ioe) {
+            System.err.println(ioe.getMessage());
+        }
+    }
+
+    public static class Command {
+
+        @Parameter(names = {"-m",
+                            "--model-file"}, description = "POMDP File path and name")
+        public String modelFile = "test.POMDP";
+
+        @Parameter(names = {"-i",
+                            "--iteration-number"}, description = "Number of iteration", validateWith = PositiveInteger.class)
+        public Integer iterTime = 10;
+
+        @Parameter(names = {"-l",
+                            "--loop-number"}, description = "Number of Loop", validateWith = PositiveInteger.class)
+        public Integer loopTime = 1;
+
+        @Parameter(names = {"-r",
+                            "--result-file"}, description = "Test result file path and name")
+        public String resultFile = "test_result";
+
+        @Override
+        public String toString() {
+            final StringBuffer sb = new StringBuffer(
+                    "Command{");
+            sb.append("modelFile='").append(modelFile).append('\'');
+            sb.append(", iterTime=").append(iterTime);
+            sb.append(", loopTime=").append(loopTime);
+            sb.append(", resultFile='").append(resultFile).append('\'');
+            sb.append('}');
+            return sb.toString();
+        }
+
+    }
+
+
+}

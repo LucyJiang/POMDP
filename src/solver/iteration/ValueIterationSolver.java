@@ -1,0 +1,39 @@
+package solver.iteration;
+
+import common.ValueFunctionImp;
+import model.POMDP;
+import solver.util.Timer;
+
+public abstract class ValueIterationSolver extends IterationSolver {
+
+    protected POMDP pomdp;
+    protected ValueFunctionImp current;
+    protected ValueFunctionImp old;
+
+    public POMDP getPOMDP() {
+        return pomdp;
+    }
+
+    public ValueFunctionImp getValueFunction() {
+        return current;
+    }
+
+    public ValueFunctionImp getOldValueFunction() {
+        return old;
+    }
+
+    public void recordVectorCount() {
+        if (current != null) {
+            ValueIterationTimer vit = (ValueIterationTimer) getTimer();
+            vit.recordVectorCount(current.size());
+        }
+    }
+
+    @Override
+    public Timer getTimer() {
+        if (this.timer == null) {
+            this.timer = new ValueIterationTimer();
+        }
+        return this.timer;
+    }
+}

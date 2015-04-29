@@ -1,0 +1,30 @@
+SETUP:
+discount: 0.8
+states: s1 s2
+actions: a1 a2
+observations: o1 o2
+
+IB:
+0.5 0.5
+
+T: a1
+0.5 0.5
+0 1
+
+T: a2
+0.2 0.8
+0.7 0.3
+
+O: a1
+0.1 0.9
+0.8 0.2
+
+O: a2
+0.2 0.8
+0.5 0.5
+
+R: a1
+65 80
+
+R: a2
+20 75

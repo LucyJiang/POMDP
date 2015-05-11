@@ -82,6 +82,7 @@ public class TestResult {
                 }
             }
             res.value += r.value;
+            res.valueFunction = r.valueFunction;
         }
 
 
@@ -98,7 +99,6 @@ public class TestResult {
             res.vectorNumber.set(i, res.vectorNumber.get(i) / size);
         }
 
-        res.valueFunction = null;
         res.value = res.value / size;
         return res;
     }

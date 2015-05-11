@@ -29,7 +29,10 @@ public class Runner {
         JCommander jc = new JCommander(jct);
         try {
             jc.parse(args);
-
+            if(jct.help){
+                jc.usage();
+                return;
+            }
         } catch (ParameterException e) {
             System.out.println("Error: " + e.getMessage());
             jc.usage();
@@ -42,7 +45,7 @@ public class Runner {
             List<TestResult> tr = Tester
                     .FullTestSet(pomdp, jct.loopTime, jct.iterTime);
             Utils.writeTestToFile(pomdp, tr, jct.resultFile, "TEST Result");
-            Utils.generateChart(tr, "demo");
+            Utils.generateChart(tr, "");
         } catch (IOException ioe) {
             System.err.println(ioe.getMessage());
         }
@@ -51,20 +54,23 @@ public class Runner {
     public static class Command {
 
         @Parameter(names = {"-m",
-                            "--model-file"}, description = "POMDP File path and name")
+                            "--model-file"}, description = "relative path and name of the POMDP model file.")
         public String modelFile = "test.POMDP";
 
         @Parameter(names = {"-i",
-                            "--iteration-number"}, description = "Number of iteration", validateWith = PositiveInteger.class)
+                            "--iteration-number"}, description = "number of iterations for the algorithms.", validateWith = PositiveInteger.class)
         public Integer iterTime = 10;
 
         @Parameter(names = {"-l",
-                            "--loop-number"}, description = "Number of Loop", validateWith = PositiveInteger.class)
+                            "--loop-number"}, description = "number of loops you want the algorithms to run.", validateWith = PositiveInteger.class)
         public Integer loopTime = 1;
 
         @Parameter(names = {"-r",
-                            "--result-file"}, description = "Test result file path and name")
+                            "--result-file"}, description = "relative path and name of the generated test result.")
         public String resultFile = "test_result";
+
+        @Parameter(names = {"-h","--help"}, help = true,  description = "Show Usage")
+        private boolean help;
 
         @Override
         public String toString() {
@@ -74,6 +80,7 @@ public class Runner {
             sb.append(", iterTime=").append(iterTime);
             sb.append(", loopTime=").append(loopTime);
             sb.append(", resultFile='").append(resultFile).append('\'');
+            sb.append(", help=").append(help);
             sb.append('}');
             return sb.toString();
         }

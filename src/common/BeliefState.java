@@ -1,11 +1,5 @@
 /** ------------------------------------------------------------------------- *
  * libpomdp
- * ========
- * File: BeliefState.java
- * Description: interface to implement different representations
- *              of a belief state
- *              properties are to be filled by extending classes
- * Copyright (c) 2009, 2010 Diego Maniloff, Mauricio Araya 
  --------------------------------------------------------------------------- */
 
 package common;

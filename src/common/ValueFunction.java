@@ -1,16 +1,11 @@
-
+/** ------------------------------------------------------------------------- *
+ * libpomdp
+ --------------------------------------------------------------------------- */
 package common;
 
 
 import model.Vector;
 
-/**
- * Representation of a set of alpha vectors and their associated actions for
- * direct control (if possible)
- *
- * @author Diego Maniloff
- * @author Mauricio Araya
- */
 public interface ValueFunction {
 
     public double V(BeliefState b);

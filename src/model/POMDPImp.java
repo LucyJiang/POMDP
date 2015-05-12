@@ -10,7 +10,6 @@ import org.apache.commons.math3.linear.RealMatrix;
 import util.Utils;
 
 import java.io.*;
-import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -175,7 +174,7 @@ public class POMDPImp implements POMDP {
         return vf;
     }
 
-    //done
+
     public double getRewardMax() {
         double max_val = Double.NEGATIVE_INFINITY;
         for (int a = 0; a < numA(); a++) {
@@ -186,7 +185,7 @@ public class POMDPImp implements POMDP {
         return max_val;
     }
 
-    //done
+
     public double getRewardMin() {
         double min_val = Double.POSITIVE_INFINITY;
         for (int a = 0; a < numA(); a++) {
@@ -197,7 +196,7 @@ public class POMDPImp implements POMDP {
         return min_val;
     }
 
-    //done
+
     public double getRewardMaxMin() {
         double max_val = Double.NEGATIVE_INFINITY;
         for (int a = 0; a < numA(); a++) {
@@ -208,22 +207,17 @@ public class POMDPImp implements POMDP {
         return max_val;
     }
 
-    //done
+
     public double getRewardMin(int a) {
         return R.get(a).getMinValue();
     }
 
-    //done
+
     public double getRewardMax(int a) {
         return R.get(a).getMaxValue();
     }
 
-    //TODO
-    public AlphaVector getRewardVec(int a, BeliefState bel) {
-        return (new AlphaVector(RforA(a), a));
-    }
 
-    //done,need reform
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("POMDP:\n");
@@ -271,7 +265,7 @@ public class POMDPImp implements POMDP {
                 }
                 read.close();
             } else {
-                throw new NoSuchFileException("Cannot find file: " + filename);
+                throw new IOException("Cannot find file: " + filename);
             }
 
 

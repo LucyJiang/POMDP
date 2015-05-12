@@ -16,73 +16,77 @@ import java.util.List;
 
 public class POMDPImp implements POMDP {
 
-    // ------------------------------------------------------------------------
-    // properties
-    // ------------------------------------------------------------------------
-
-    // number of states
+    /**
+     * Set of State, Action, Observation's names
+     */
     private List<String> S = new ArrayList<String>(); //NS
     private List<String> A = new ArrayList<String>(); //NA
     private List<String> O = new ArrayList<String>(); //NO
 
-    // transition model: a x s x s'
+    /**
+     * T function matrix
+     */
     private HashMap<Integer, RealMatrix> T = new HashMap<Integer, RealMatrix>();
-    // observation model: a x s' x o
+
+    /**
+     * Z function matrix
+     */
     private HashMap<Integer, RealMatrix> Z = new HashMap<Integer, RealMatrix>();
-    // reward model: a x s'
+
+    /**
+     * R function matrix
+     */
     private HashMap<Integer, Vector> R = new HashMap<Integer, Vector>();
 
-    // discount factor
+    /**
+     * discount factor
+     */
     private double gamma;
-    // starting belief
+
+    /**
+     * initial belief of the model
+     */
     private BeliefStateImp initBelief;
 
-    // ------------------------------------------------------------------------
-    // methods
-    // ------------------------------------------------------------------------
 
-    /// tao(b,a,o)
+    /**
+     * BeliefState update method
+     * tao(b,a,o)
+     */
     public BeliefState nextBeliefState(BeliefState b, int a, int o) {
-        // long start = System.currentTimeMillis();
-        // System.out.println("made it to tao");
+
         BeliefState bPrime;
-        // compute T[a]' * b1
         Vector b1 = b.getPoint();
         Vector b2 = new Vector(TforA(a).transpose().operate(b1));
-        // System.out.println("Elapsed in tao - T[a] * b1" +
-        // (System.currentTimeMillis() - start));
 
-        // element-wise product with Z[a](:,o)
+        //update vector b2
         b2 = new Vector(b2.ebeMultiply(ZforA(a).getColumnVector(o)));
-        // System.out.println("Elapsed in tao - Z[a] .* b2" +
-        // (System.currentTimeMillis() - start));
 
-        // compute P(o|b,a) - norm1 is the sum of the absolute values
+        // P(o|b,a)
         double poba = b2.getL1Norm();
         // make sure we can normalize
         if (poba < 0.00001) {
-            // System.err.println("Zero prob observation - resetting to init");
-            // this branch will have poba = 0.0
+            // P(o|b,a) = 0
             bPrime = initBelief;
         } else {
             // safe to normalize now
             b2.scale(1.0 / poba);
             bPrime = new BeliefStateImp(b2, poba);
         }
-        // System.out.println("Elapsed in tao" + (System.currentTimeMillis() -
-        // start));
-        // return
         return bPrime;
     }
 
-    /// R(b,a)
+    /**
+     * Immediate Reward for a given BeliefState and a action
+     */
     public double expectedImmediateReward(BeliefState bel, int a) {
         Vector b = bel.getPoint();
         return b.dotProduct(RforA(a));
     }
 
-    // P(o|b,a) in vector form for all o's
-
+    /**
+     * Function P(o|b,a)
+     */
     public Vector observationProbabilities(BeliefState b, int a) {
         Vector b1 = b.getPoint();
         Vector Tb = new Vector(TforA(a).operate(b1));
@@ -90,69 +94,67 @@ public class POMDPImp implements POMDP {
         return Poba;
     }
 
-    //done
     public RealMatrix TforA(int a) {
         return T.get(a).copy();
     }
 
-    //done
     public RealMatrix ZforA(int a) {
         return Z.get(a).copy();
     }
 
-    //done
     public Vector RforA(int a) {
         return R.get(a).copy();
     }
 
-    //done
     public BeliefState getInitBeliefState() {
         return initBelief.copy();
     }
 
-    //done
     public int numS() {
         return S.size();
     }
 
-    //done
     public int numA() {
         return A.size();
     }
 
-    //done
     public int numO() {
         return O.size();
     }
 
-    //done
     public double gamma() {
         return gamma;
     }
 
-    //done
     @Override
     public String actionName(int a) {
         return A.get(a);
     }
 
-    //done
     @Override
     public String observationName(int o) {
         return O.get(o);
     }
 
-    //done
     @Override
     public String stateName(int s) {
         return S.get(s);
     }
 
+    /**
+     * Get a random action
+     * @return
+     */
     public int getRandomAction() {
         return (Utils.random.nextInt(numA()));
     }
 
-
+    /**
+     * Get a random observation
+     * @param bel
+     * @param a
+     * @return
+     */
     public int getRandomObservation(BeliefState bel, int a) {
         double roulette = Utils.random.nextDouble();
         Vector vect = new Vector(ZforA(a).transpose().operate(bel.getPoint()));
@@ -166,14 +168,13 @@ public class POMDPImp implements POMDP {
         return o-1;
     }
 
-
-    //TODO
     public ValueFunctionImp getRewardValueFunction(int a) {
         ValueFunctionImp vf = new ValueFunctionImp(numS());
         vf.push(RforA(a), a);
         return vf;
     }
 
+    // Reward relative function
 
     public double getRewardMax() {
         double max_val = Double.NEGATIVE_INFINITY;
@@ -249,7 +250,16 @@ public class POMDPImp implements POMDP {
         return sb.toString();
     }
 
+    /**
+     * Factory inner class
+     */
     public static class Factory {
+        /**
+         * parser method, parse a .POMDP file to a POMDP object
+         * @param filename
+         * @return
+         * @throws IOException
+         */
         public static POMDP parse(String filename) throws IOException {
             POMDPImp model = new POMDPImp();
             String content = "";

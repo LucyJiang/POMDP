@@ -6,6 +6,9 @@ package common;
 
 import model.Vector;
 
+/**
+ * AlphaVector used in Value Function and value iteration
+ */
 public class AlphaVector implements Comparable<AlphaVector> {
 
     protected Vector v;
@@ -16,17 +19,18 @@ public class AlphaVector implements Comparable<AlphaVector> {
         this.v = v;
         this.a = a;
     }
-
     public AlphaVector(int dim) {
         this(new Vector(dim), -1);
     }
-
-
     public AlphaVector(int dim, int a) {
         this(new Vector(dim), a);
     }
 
-
+    /**
+     * evaluate the AlphaVector with the BeliefState
+     * @param bel
+     * @return
+     */
     public double eval(BeliefState bel) {
         return (v.dotProduct(bel.getPoint()));
     }
@@ -40,6 +44,10 @@ public class AlphaVector implements Comparable<AlphaVector> {
         this.a = a;
     }
 
+    /**
+     * deep copy this AlphaVector
+     * @return
+     */
     public AlphaVector copy() {
         return (new AlphaVector(v.copy(), a));
     }
@@ -55,36 +63,21 @@ public class AlphaVector implements Comparable<AlphaVector> {
     }
 
 
-    public int compareTo(AlphaVector vec, double delta) {
-        return (v.compareTo(vec.v));
-    }
-
     public Vector getVectorRef() {
         return (v);
     }
 
-
+    // methods for Comparable interface
     public int compareTo(AlphaVector vec) {
         return (v.compareTo(vec.v));
     }
 
-
-    public void setValues(Vector v) {
-        this.v = v;
+    public int compareTo(AlphaVector vec, double delta) {
+        return (v.compareTo(vec.v));
     }
 
 
-    public void set(AlphaVector res) {
-        setValues(res.v.copy());
-        setAction(res.a);
-    }
-
-
-    public void setValue(int idx, double value) {
-        v.setEntry(idx, value);
-    }
-
-
+    // addition of two AlphaVector
     public void add(AlphaVector alpha) {
         add(alpha.v);
     }

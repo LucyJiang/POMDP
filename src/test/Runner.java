@@ -11,7 +11,9 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.List;
 
-
+/**
+ * Gateway of the whole system
+ */
 public class Runner {
     public static void main(String[] args) {
         System.setProperty("java.library.path","/usr/local/lib/jni");
@@ -25,6 +27,9 @@ public class Runner {
             e.printStackTrace();
         }
 
+        /**
+         * Build Command from user input
+         */
         Command jct = new Command();
         JCommander jc = new JCommander(jct);
         try {
@@ -40,6 +45,10 @@ public class Runner {
         }
 
         System.out.println(jct);
+
+        /**
+         * conduct full test for user input
+         */
         try {
             POMDP pomdp = POMDPImp.Factory.parse(jct.modelFile);
             List<TestResult> tr = Tester
@@ -51,6 +60,9 @@ public class Runner {
         }
     }
 
+    /**
+     * Command used by CLI
+     */
     public static class Command {
 
         @Parameter(names = {"-m",

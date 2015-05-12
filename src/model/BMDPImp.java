@@ -9,7 +9,14 @@ import org.apache.commons.math3.linear.RealMatrix;
 
 public class BMDPImp implements BMDP {
 
+    /**
+     * inner POMDP
+     */
     POMDP pomdp;
+
+    /**
+     * A RealMatrix for all tau function
+     */
     RealMatrix tau[][];
 
     public BMDPImp(POMDP pomdp) {
@@ -17,14 +24,16 @@ public class BMDPImp implements BMDP {
         init();
     }
 
+    /**
+     * initialise the BMDP
+     */
     private void init() {
         tau = new RealMatrix[numO()][numA()];
         for (int a = 0; a < numA(); a++) {
             RealMatrix tMat = this.TforA(a);
             RealMatrix oMat = this.ZforA(a);
-            // oMat.transpose();
-            // System.out.println(oMat.toString());
             for (int o = 0; o < numO(); o++) {
+                //create tau function
                 RealMatrix oDiag = MatrixUtils.createRealMatrix(numS(), numS());
                 for (int s = 0; s < numS(); s++) {
                     oDiag.setEntry(s, s, oMat.getEntry(s, o));
@@ -34,7 +43,10 @@ public class BMDPImp implements BMDP {
         }
     }
 
-
+    /**
+     * get next BeliefState for the current BeliefState with given action and
+     * observation
+     */
     public BeliefState nextBeliefState(BeliefState b, int a, int o) {
         Vector vect = new Vector(tau[o][a].operate(b.getPoint()));
         vect.scale(1.0 / vect.getL1Norm());

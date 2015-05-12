@@ -11,10 +11,20 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Utilities
+ */
 public class Utils {
 
     public static final Random random = new Random(System.currentTimeMillis());
 
+    /**
+     * Write the TestResult to file
+     * @param model
+     * @param res
+     * @param filename
+     * @param pre
+     */
     public static void writeTestToFile(
             POMDP model,
             List<TestResult> res,
@@ -37,6 +47,11 @@ public class Utils {
         }
     }
 
+    /**
+     * Generate Chart for TestResult
+     * @param res
+     * @param subtitle
+     */
     public static void generateChart(List<TestResult> res, String subtitle) {
         // Create Charts
         // Iteration Time Comparision

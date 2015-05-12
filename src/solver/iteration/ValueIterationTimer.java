@@ -4,9 +4,19 @@ import solver.util.Timer;
 
 import java.util.ArrayList;
 
+/**
+ * Timer for value iteration solver
+ */
 public class ValueIterationTimer extends Timer {
 
+    /**
+     * time consumed on linear programming solving
+     */
     public long total_lp_time;
+
+    /**
+     * record the trend of number of vector
+     */
     public ArrayList<Integer> vectorCounter;
 
     public ValueIterationTimer() {

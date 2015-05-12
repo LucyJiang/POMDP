@@ -6,6 +6,9 @@ import solver.util.Timer;
 
 import java.util.ArrayList;
 
+/**
+ * Iteration Solver
+ */
 public abstract class IterationSolver implements Solver {
 
     protected Timer timer;
@@ -29,6 +32,10 @@ public abstract class IterationSolver implements Solver {
             criterias.add(c);
     }
 
+    /**
+     * check all criterias
+     * @return
+     */
     private boolean checkStop() {
         for (Criteria c : criterias) {
             if (c.check(this))

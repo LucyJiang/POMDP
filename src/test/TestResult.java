@@ -9,11 +9,23 @@ import solver.iteration.ValueIterationTimer;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TestResult including time and value relative information
+ */
 public class TestResult {
+    // test name
     private String testName;
+
+    // time consume on initial
     private long initTime;
+
+    // time consume on each iteration
     private ArrayList<Long> iterTime;
+
+    // iteration number
     private int iterationNumber;
+
+    // time consume totally
     private double totalTime;
 
     //For ValueIterationSolver
@@ -33,6 +45,12 @@ public class TestResult {
         this.value = 0;
     }
 
+    /**
+     * Constructor, it will pick up information from the given solver
+     * @param name
+     * @param model
+     * @param solver
+     */
     public TestResult(String name, POMDP model, Solver solver) {
         this.testName = name;
         this.initTime = solver.getTimer().getInitTime();
@@ -53,7 +71,12 @@ public class TestResult {
         }
     }
 
-
+    /**
+     * figure out a average TestResult from the List of TestResult
+     * @param name
+     * @param list
+     * @return
+     */
     public static TestResult average(String name, List<TestResult> list) {
         int size = list.size();
         TestResult res = new TestResult();

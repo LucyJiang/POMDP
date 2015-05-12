@@ -8,28 +8,43 @@ import util.Utils;
 
 public class BeliefStateImp implements BeliefState {
 
-    // sparse representation of the belief
+    /**
+     * Belief Point (probability distribution)
+     */
     private Vector belief;
 
-    // associated P(o|b,a)
+    /**
+     * associated P(o|b,a) for the belief
+     * @return
+     */
+
     private double poba = -1.0;
 
-    // associated alpha vector id
-    private int planid = -1;
 
-    // constructor
-    // in case this is the initial belief, poba = 0.0
+    /**
+     * Constructor with a p(o|b,a)
+     * @param belief
+     * @param poba
+     */
     public BeliefStateImp(Vector belief, double poba) {
         this.belief = belief;
         this.poba = poba;
     }
 
+    /**
+     * Constructor with a default p(o|b,a)
+     * @param belief
+     */
     public BeliefStateImp(Vector belief) {
         this(belief, -1);
     }
-    // calling this method should be for debugging
-    // purposes only, otherwise we loose the sparse rep
 
+
+    /**
+     * generate a random BeliefState as the initial BeliefState
+     * @param size
+     * @return
+     */
     public static BeliefStateImp generateRandom(int size) {
         Vector v = new Vector(size);
         for (int i = 0; i < size; i++) {
@@ -52,4 +67,4 @@ public class BeliefStateImp implements BeliefState {
     }
 
 
-} // BeliefStateStandard
+}

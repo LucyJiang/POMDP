@@ -7,29 +7,25 @@ package common;
 
 import model.Vector;
 
+/**
+ * BeliefState, a belif point associated with a probability
+ */
 public interface BeliefState {
 
-
     /**
-     * Get belief state point as a custom vector.
-     *
-     * @return belief-point
+     * get the belief point in the state
+     * @return
      */
     public Vector getPoint();
 
     /**
-     * Compare with other belief-state.
-     *
-     * @param bel a belief-state.
-     * @return true if equals, false else
+     * Compare two BeliefState
      */
     public boolean compare(BeliefState bel);
 
 
     /**
-     * Create a proper copy of the belief-state.
-     *
-     * @return a belief-state copy
+     * get a copy of this BeliefState
      */
     public BeliefState copy();
 }

@@ -5,8 +5,12 @@ import org.apache.commons.math3.exception.NumberIsTooLargeException;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
 
-
+/**
+ * Wrapper of ArrayRealVector, most of methods are directly wrap the methods
+ * org.apache.commons.math3.linear.ArrayRealVector
+ */
 public class Vector extends ArrayRealVector implements Comparable<Vector> {
+
     public Vector() {
         super();
     }

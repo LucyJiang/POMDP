@@ -342,4 +342,4 @@ public class ValueFunctionImp implements ValueFunction {
         return set.get(i).getVectorRef().getEntry(s);
     }
 
-} // valueFunctionSparseMTJ
+}

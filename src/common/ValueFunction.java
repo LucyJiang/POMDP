@@ -18,4 +18,4 @@ public interface ValueFunction {
 
     public Vector getAlphaValues(int idx);
 
-} // ValueFunction
+}

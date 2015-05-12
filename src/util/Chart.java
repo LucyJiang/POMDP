@@ -11,8 +11,19 @@ import org.jfree.ui.RefineryUtilities;
 
 import java.awt.*;
 
+/**
+ * Utilities about Chart
+ */
 public class Chart {
 
+    /**
+     * Show a Line Chart
+     * @param window
+     * @param title
+     * @param xA
+     * @param yA
+     * @param dataset
+     */
     public static void showLineChart(
             String window,
             String title,
@@ -25,6 +36,14 @@ public class Chart {
         chart.setVisible(true);
     }
 
+    /**
+     * Show a Bar Chart
+     * @param window
+     * @param title
+     * @param xA
+     * @param yA
+     * @param dataset
+     */
     public static void showBarChart(
             String window,
             String title,

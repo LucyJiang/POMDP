@@ -8,87 +8,64 @@ import org.apache.commons.math3.linear.RealMatrix;
 
 public interface POMDP {
 
-    /// tao(b,a,o)
+    /**
+     * Tau function
+     */
     public BeliefState nextBeliefState(BeliefState b, int a, int o);
 
-    /// R(b,a): scalar value
+    /**
+     * Immediate Reward function
+     */
     public double expectedImmediateReward(BeliefState b, int a);
 
-    /// P(o|b,a): 1 x o in vector form for all o's
+    /**
+     * observation probabilities
+     */
     public Vector observationProbabilities(BeliefState bel, int a);
 
-    /// T(s,a,s'): s x s' matrix
+    /**
+     * T function matrix
+     * @param a
+     * @return
+     */
     public RealMatrix TforA(int a);
 
-    /// O(s',a,o): s' x o matrix
+    /**
+     * O function matrix
+     * @param a
+     * @return
+     */
     public RealMatrix ZforA(int a);
 
-    /// R(s,a): 1 x s vector
+    /**
+     * R function vector
+     * @param a
+     * @return
+     */
     public Vector RforA(int a);
 
-    /// initial belief state
+    /**
+     * Initial BeliefState
+     * @return
+     */
     public BeliefState getInitBeliefState();
 
-    /**
-     * Get the number of states.
-     *
-     * @return the number of states
-     */
+    // getters of #S, #A, #O and their name
     public int numS();
 
-    /**
-     * Get the number of actions.
-     *
-     * @return the number of actions
-     */
     public int numA();
 
-    /**
-     * Get the number of observations.
-     *
-     * @return the number of observations
-     */
     public int numO();
 
-    /**
-     * Get the Gamma value.
-     *
-     * @return the gamma value
-     */
-    public double gamma();
-
-    /**
-     * Get the name of an action.
-     *
-     * @param a the action
-     * @return the name of the action
-     */
     public String actionName(int a);
-
-    /**
-     * Get the name of an observation.
-     *
-     * @param o the action
-     * @return the name of the action
-     */
     public String observationName(int o);
-
-    /**
-     * Get the name of a state.
-     *
-     * @param s the state
-     * @return the name of the state
-     */
     public String stateName(int s);
 
+    public double gamma();
     public int getRandomAction();
-
     public int getRandomObservation(BeliefState bel, int a);
-
     public double getRewardMax();
-
     public double getRewardMin();
-
     public double getRewardMaxMin();
 
     public ValueFunctionImp getRewardValueFunction(int a);

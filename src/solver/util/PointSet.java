@@ -7,6 +7,9 @@ import util.Utils;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * PointSet, actually a wrapper of ArrayList<BeliefState>
+ */
 public class PointSet implements Iterable<BeliefState> {
     ArrayList<BeliefState> set;
 
@@ -14,6 +17,11 @@ public class PointSet implements Iterable<BeliefState> {
         set = new ArrayList<BeliefState>();
     }
 
+    /**
+     * add a new BeliefState into the PointSet
+     * @param arg0
+     * @return
+     */
     public boolean add(BeliefState arg0) {
         if (!member(arg0))
             return set.add(arg0);
@@ -27,14 +35,6 @@ public class PointSet implements Iterable<BeliefState> {
                 return true;
         }
         return false;
-    }
-
-    public void clear() {
-        set.clear();
-    }
-
-    public boolean contains(BeliefState arg0) {
-        return set.contains(arg0);
     }
 
     public BeliefState get(int arg0) {
@@ -59,10 +59,18 @@ public class PointSet implements Iterable<BeliefState> {
         return (set.size());
     }
 
+    /**
+     * get the iterator
+     * @return
+     */
     public Iterator<BeliefState> iterator() {
         return (set.iterator());
     }
 
+    /**
+     * get a BeliefState randomly
+     * @return
+     */
     public BeliefState getRandom() {
         return get(Utils.random.nextInt(Integer.MAX_VALUE) % size());
     }

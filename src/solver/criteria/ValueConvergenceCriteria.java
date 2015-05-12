@@ -7,6 +7,9 @@ import model.Vector;
 import solver.iteration.IterationSolver;
 import solver.iteration.ValueIterationSolver;
 
+/**
+ * Value Convergence Criteria
+ */
 public class ValueConvergenceCriteria extends Criteria {
 
     static final int MIN_ITERATIONS = 5;
@@ -24,6 +27,7 @@ public class ValueConvergenceCriteria extends Criteria {
             System.out.println("eval = Infinity");
             return false;
         }
+        /* sort the old and new value functions */
         ((ValueFunctionImp) newv).sort();
         ((ValueFunctionImp) oldv).sort();
         double conv = 0;

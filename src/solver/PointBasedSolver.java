@@ -10,10 +10,24 @@ import model.Vector;
 import solver.iteration.ValueIterationSolver;
 import solver.util.PointSet;
 
+/**
+ * Point Based Value Iteration Solver
+ */
 public class PointBasedSolver extends ValueIterationSolver {
 
+    /**
+     * Belief MDP involved in this solver
+     */
     BMDP bmdp;
+
+    /**
+     * B set (full)
+     */
     PointSet fullBset;
+
+    /**
+     * parameters for PBVI
+     */
     PointBasedSolverParam params;
 
     public PointBasedSolver(POMDP pomdp, PointBasedSolverParam params) {
@@ -67,6 +81,12 @@ public class PointBasedSolver extends ValueIterationSolver {
         }
     }
 
+    /**
+     * backup method for a given BeliefState and a ValueFunction
+     * @param bel
+     * @param vf
+     * @return
+     */
     private AlphaVector backup(BeliefState bel, ValueFunctionImp vf) {
         AlphaVector alpha_max = null;
         double alpha_max_val = Double.NEGATIVE_INFINITY;
@@ -97,6 +117,11 @@ public class PointBasedSolver extends ValueIterationSolver {
         return (alpha_max);
     }
 
+    /**
+     * Async Backup
+     * @param bset
+     * @return
+     */
     private ValueFunctionImp asyncBackup(PointSet bset) {
         ValueFunctionImp newv = new ValueFunctionImp(bmdp.numS());
         PointSet testBset = bset.copy();
@@ -120,6 +145,11 @@ public class PointBasedSolver extends ValueIterationSolver {
         return newv;
     }
 
+    /**
+     * Sync Backup
+     * @param bset
+     * @return
+     */
     protected ValueFunctionImp syncBackup(PointSet bset) {
         ValueFunctionImp newv = new ValueFunctionImp(bmdp.numS());
         for (BeliefState bel : bset) {
@@ -128,6 +158,9 @@ public class PointBasedSolver extends ValueIterationSolver {
         return newv;
     }
 
+    /**
+     * Expand policy
+     */
     protected void expand() {
         if (fullBset == null) {
             fullBset = new PointSet();
@@ -158,6 +191,10 @@ public class PointBasedSolver extends ValueIterationSolver {
             }
         }
     }
+
+
+    //Different Policy for getting BeliefState
+
 
     private BeliefState collectExploratoryAction(PointSet testBset) {
         BeliefState b = testBset.remove(0);

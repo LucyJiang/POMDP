@@ -14,33 +14,28 @@ import java.util.Collections;
 
 public class ValueFunctionImp implements ValueFunction {
 
-    // ------------------------------------------------------------------------
-    // properties
-    // ------------------------------------------------------------------------
 
-    // represent a value function via a Matrix object
+    /**
+     * Collection of AlphaVector
+     */
     private ArrayList<AlphaVector> set;
     private int states;
     private long total_lp_time;
 
-    // constructor
+    /**
+     * Constructor
+     * @param states
+     */
     public ValueFunctionImp(int states) {
         set = new ArrayList<AlphaVector>();
         this.states = states;
     }
 
-    // ------------------------------------------------------------------------
-    // interface methods
-    // ------------------------------------------------------------------------
 
-    public ValueFunctionImp(double[][] v, int[] a) {
-        this(v[0].length);
-        for (int i = 0; i < a.length; i++) {
-            push(v[i], a[i]);
-        }
-    }
-
-    // list of actions associated with each alpha
+    /**
+     * get all actions' index
+     * @return
+     */
     public int[] getActions() {
         int[] ret = new int[size()];
         for (int i = 0; i < size(); i++) {
@@ -49,7 +44,11 @@ public class ValueFunctionImp implements ValueFunction {
         return (ret);
     }
 
-    // return value of a belief state
+    /**
+     * Calculate the Reward for a given BeliefState
+     * @param bel
+     * @return
+     */
     public double V(BeliefState bel) {
         double valmax = Double.NEGATIVE_INFINITY;
         for (AlphaVector alpha : set) {
@@ -61,14 +60,12 @@ public class ValueFunctionImp implements ValueFunction {
         return valmax;
     }
 
-    public boolean push(double list[], int a) {
-        return push(new Vector(list), a);
-    }
+
+    //push vector into Value function
 
     public boolean push(Vector vec, int a) {
         return (push(new AlphaVector(vec.copy(), a)));
     }
-
     public boolean push(AlphaVector ent) {
         return (set.add(ent));
     }
@@ -88,11 +85,10 @@ public class ValueFunctionImp implements ValueFunction {
         return newv;
     }
 
+    //Getters about AlphaVector
     public Vector getAlphaValues(int idx) {
         return (getAlphaVector(idx).getVectorCopy());
     }
-
-
     public int getAlphaAction(int idx) {
         return (set.get(idx).getAction());
     }
@@ -117,15 +113,28 @@ public class ValueFunctionImp implements ValueFunction {
         return sb.toString();
     }
 
+    /**
+     * prune function with default deleta(1e-10)
+     * @return
+     */
     public long prune() {
         return prune(1e-10);
     }
 
+    /**
+     * prune function
+     * @return
+     */
     public long prune(double delta) {
         domination_check(delta);
         return (lp_pruning(delta));
     }
 
+    /**
+     * linear programming for pruning
+     * @param delta
+     * @return
+     */
     private long lp_pruning(double delta) {
         total_lp_time = 0;
         if (set.size() < 2)
@@ -152,6 +161,7 @@ public class ValueFunctionImp implements ValueFunction {
         return total_lp_time;
     }
 
+    // get Best Alpha
     public AlphaVector getBestAlpha(BeliefState b) {
         return (getBestAlpha(b, this.set, 0.0));
     }
@@ -182,11 +192,17 @@ public class ValueFunctionImp implements ValueFunction {
             return (testVec);
     }
 
+    /**
+     * Find the Region in Linear programming
+     * @param selVect
+     * @param newv
+     * @param delta
+     * @return
+     */
     private BeliefState find_region(
             AlphaVector selVect,
             ArrayList<AlphaVector> newv,
             double delta) {
-        // Can Sparsity play a role here?, nice question!
         BeliefState bel = null;
         glp_prob lp;
         glp_smcp parm;
@@ -195,7 +211,7 @@ public class ValueFunctionImp implements ValueFunction {
         lp = GLPK.glp_create_prob();
         GLPK.glp_set_prob_name(lp, "FindRegion");
 
-        // Define Solution Vector
+        /** Solution Vector */
         GLPK.glp_add_cols(lp, states + 1);
         for (int i = 0; i < states; i++) {
             GLPK.glp_set_col_kind(lp, i + 1, GLPKConstants.GLP_CV);
@@ -208,7 +224,7 @@ public class ValueFunctionImp implements ValueFunction {
                               Double.NEGATIVE_INFINITY,
                               Double.POSITIVE_INFINITY);
 
-        // Define Constraints
+        /** Constraints */
         GLPK.glp_add_rows(lp, newv.size() + 1);
         ind = GLPK.new_intArray(states + 2);
         for (int j = 0; j < states + 2; j++) {
@@ -232,13 +248,6 @@ public class ValueFunctionImp implements ValueFunction {
             GLPK.glp_set_mat_row(lp, i + 1, states + 1, ind, val);
         }
 
-        //
-//        ind=GLPK.new_intArray(states+2);
-//        for (int j=0;j<states+2;j++){
-//          GLPK.intArray_setitem(ind,j+1,j+1);
-//        }
-//        val=GLPK.new_doubleArray(states+2);
-        //
 
         GLPK.glp_set_row_bnds(lp,
                               newv.size() + 1,
@@ -251,10 +260,9 @@ public class ValueFunctionImp implements ValueFunction {
         GLPK.doubleArray_setitem(val, states + 1, 0.0);
         GLPK.glp_set_mat_row(lp, newv.size() + 1, states + 1, ind, val);
 
-        // Define Objective
+        /** Objective */
         GLPK.glp_set_obj_dir(lp, GLPKConstants.GLP_MAX);
         GLPK.glp_set_obj_coef(lp, states + 1, 1.0);
-        //GLPK.glp_write_lp(lp, null, "yi.lp");
         parm = new glp_smcp();
         GLPK.glp_init_smcp(parm);
         parm.setMsg_lev(GLPKConstants.GLP_MSG_OFF);
@@ -264,7 +272,6 @@ public class ValueFunctionImp implements ValueFunction {
         if (ret == 0) {
             double val1 = GLPK.glp_get_obj_val(lp);
             double val2 = GLPK.glp_get_col_prim(lp, states + 1);
-//            System.out.println("vals ("+val1+" "+val2+")");
             if (val1 > delta && val2 > delta) {
                 Vector thev = new Vector(states);
                 for (int i = 1; i <= states; i++)
@@ -276,6 +283,10 @@ public class ValueFunctionImp implements ValueFunction {
         return (bel);
     }
 
+    /**
+     * check the ddomination
+     * @param delta
+     */
     private void domination_check(double delta) {
         if (set.size() < 2)
             return;
@@ -311,6 +322,10 @@ public class ValueFunctionImp implements ValueFunction {
         set = newv;
     }
 
+    /**
+     * calculate the cross sum
+     * @param vfB
+     */
     public void crossSum(ValueFunctionImp vfB) {
         int mya = set.get(0).getAction();
         ArrayList<AlphaVector> backup = set;
@@ -334,12 +349,12 @@ public class ValueFunctionImp implements ValueFunction {
 
     }
 
+    /**
+     * sort the inner alpha-vectors
+     */
     public void sort() {
         Collections.sort(set);
     }
 
-    public double getAlphaElement(int i, int s) {
-        return set.get(i).getVectorRef().getEntry(s);
-    }
 
 }
